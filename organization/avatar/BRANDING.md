@@ -11,4 +11,4 @@ The organization avatar is the shared identity for Home Health Hub and the only 
 
 Do not recolor this avatar with a daemon accent. Small exports must be inspected for clarity after regeneration.
 
-The approved native-vector and monochrome files are in `approved/`. Review evidence and the original proposals remain available in `candidates/` and `docs/review/`.
+The approved native-vector and monochrome files are in `approved/`. Temporary proposals and comparison output are not retained after approval.

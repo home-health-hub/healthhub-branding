@@ -15,7 +15,7 @@ A `-dev` suffix marks unreleased work. Remove it only when the asset set has pas
 ## Release checklist
 
 1. Confirm every changed image is in the correct `source/`, `approved/`, `exports/`, or `archive/` directory.
-2. Confirm no candidate or archived image is referenced as an approved asset.
+2. Confirm no superseded or unapproved image is referenced as an approved asset.
 3. Run `./scripts/build-exports.sh`.
 4. Run `./scripts/update-checksums.sh`.
 5. Run `./scripts/verify-assets.sh`.

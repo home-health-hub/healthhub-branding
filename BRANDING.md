@@ -62,7 +62,7 @@ For basal body temperature and cycle tracking, use cycle plum for the measuremen
 
 ## Branding repository and asset ownership
 
-This `healthhub-branding` repository is the authoritative home for branding documentation, editable source artwork, approved exports, and archived superseded artwork. Product repositories keep copies of the approved assets they deploy or display, but do not become the source of truth for those assets.
+This `healthhub-branding` repository is the authoritative home for branding documentation, editable source artwork, approved exports, and historically meaningful superseded artwork. Product repositories keep copies of the approved assets they deploy or display, but do not become the source of truth for those assets. Failed experiments and temporary comparisons are removed rather than archived.
 
 Organize the branding repository by identity and product:
 
