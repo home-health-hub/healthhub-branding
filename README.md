@@ -8,7 +8,7 @@
 
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](https://github.com/home-health-hub/healthhub-branding/blob/main/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/home-health-hub/healthhub-branding#changes) [![Discussions](https://img.shields.io/badge/discussions-welcome-blue)](https://github.com/home-health-hub/healthhub-branding/discussions)
 
-This repository is the source of truth for Home Health Hub brand documentation and approved visual assets. It contains the organization avatar, Health Hub artwork, daemon artwork, launcher and web exports, editable or hybrid SVGs, and archived superseded or unselected variants.
+This repository is the source of truth for Home Health Hub brand documentation and approved visual assets. It contains the organization avatar, Health Hub artwork, daemon artwork, launcher and web exports, editable or hybrid SVGs, and historically meaningful superseded assets.
 
 Start with [BRANDING.md](BRANDING.md). The current asset list and provenance are recorded in [docs/ASSET_INVENTORY.md](docs/ASSET_INVENTORY.md).
 
@@ -20,7 +20,7 @@ healthhub/             Main Hub artwork for documentation and large UI placement
 daemons/               Device-specific banners, application images, and navigation icons
 templates/             Templates for adding another device
 scripts/               Reproducible asset-export tooling
-archive/               Unselected or superseded material retained for provenance
+archive/               Previously approved or deployed assets retained when superseded
 ```
 
 Within an identity or product directory:
@@ -28,7 +28,7 @@ Within an identity or product directory:
 - `source/` contains the highest-resolution input or editable master.
 - `approved/` contains the currently approved artwork.
 - `exports/` contains derived formats and sizes; these may be regenerated.
-- `archive/` contains material that is not approved for current use.
+- `archive/` contains previously approved or deployed material that has been superseded.
 
 ## Application identity
 
@@ -44,7 +44,7 @@ The export script requires ImageMagick:
 
 The script creates Linux `hicolor` icons, browser and PWA icons, an ICO file, PNG presentation exports, and hybrid SVG representations for current raster-only artwork. Run `./scripts/verify-assets.sh` afterward.
 
-Run `./scripts/update-checksums.sh` whenever approved assets or generated exports change. Use `./scripts/verify-checksums.sh` and `./scripts/verify-reproducible-build.sh` before review. Native-vector proposals remain under `candidates/` until separately approved.
+Run `./scripts/update-checksums.sh` whenever approved assets or generated exports change. Use `./scripts/verify-checksums.sh` and `./scripts/verify-reproducible-build.sh` before review. Raster artwork uses hybrid SVGs when a native redraw would alter the approved design.
 
 The release procedure is documented in [docs/RELEASING.md](docs/RELEASING.md).
 
