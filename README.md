@@ -44,6 +44,10 @@ The export script requires ImageMagick:
 
 The script creates Linux `hicolor` icons, browser and PWA icons, an ICO file, PNG presentation exports, and hybrid SVG representations for current raster-only artwork. Run `./scripts/verify-assets.sh` afterward.
 
+Run `./scripts/update-checksums.sh` whenever approved assets or generated exports change. Use `./scripts/verify-checksums.sh` and `./scripts/verify-reproducible-build.sh` before review. Native-vector proposals remain under `candidates/` until separately approved.
+
+The release procedure is documented in [docs/RELEASING.md](docs/RELEASING.md).
+
 ## Changes
 
 Do not replace an approved image silently. Add the proposed asset beside the current one, record its provenance, preview it at its intended sizes, and move the old asset to `archive/` only after approval.

@@ -6,8 +6,8 @@ This inventory records the initial assets consolidated into this project. Reposi
 
 | Identity | Approved asset | Role | SVG status | Original source |
 |---|---|---|---|---|
-| Home Health Hub organization | `organization/avatar/approved/organization-avatar.png` | Organization avatar and the single Health Hub launcher icon | Hybrid export pending native redraw | `.github/profile/avatar.png` |
-| Health Hub | `healthhub/approved/home-health-hub.png` | Hub documentation and large UI image | Hybrid export pending native redraw | `healthhub/docs/images/home-health-hub.png` |
+| Home Health Hub organization | `organization/avatar/approved/organization-avatar.png` and `.svg` | Organization avatar and the single Health Hub launcher icon | Native vector approved; original PNG retained | `.github/profile/avatar.png` |
+| Health Hub | `healthhub/approved/home-health-hub.png` | Hub documentation and large UI image | Approved hybrid SVG preserves the raster exactly; simplified redraw rejected | `healthhub/docs/images/home-health-hub.png` |
 
 ## Daemons
 
@@ -27,6 +27,6 @@ Each product's approved files are under `daemons/<product>/approved/`. Generated
 
 ## SVG classification
 
-All initial SVGs generated from the current PNG artwork are **hybrid SVGs**: they retain the approved raster image inside an SVG container with the correct dimensions and view box. They provide consistent SVG delivery without falsely presenting an automatic trace as editable native vector artwork.
+The approved organization avatar and monochrome mark are native vectors. Other initial SVGs generated from current PNG artwork remain **hybrid SVGs**: they retain the approved raster image inside an SVG container with the correct dimensions and view box. They provide consistent SVG delivery without falsely presenting an automatic trace as editable native vector artwork.
 
 A future native-vector redraw may replace a hybrid SVG after visual approval. The corresponding PNG remains the comparison reference during that review.

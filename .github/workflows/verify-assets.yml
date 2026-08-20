@@ -1,0 +1,32 @@
+name: Verify branding assets
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install image tooling
+        run: sudo apt-get update && sudo apt-get install --yes imagemagick
+
+      - name: Validate scripts
+        run: bash -n scripts/*.sh
+
+      - name: Verify declared assets
+        run: ./scripts/verify-assets.sh
+
+      - name: Verify checksums
+        run: ./scripts/verify-checksums.sh
+
+      - name: Verify reproducible exports
+        run: ./scripts/verify-reproducible-build.sh

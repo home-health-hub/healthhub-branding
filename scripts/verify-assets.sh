@@ -31,11 +31,18 @@ for file in \
   "$project_dir/organization/avatar/exports/linux/hicolor/scalable/apps/org.homehealthhub.healthhub.svg" \
   "$project_dir/organization/avatar/exports/web/favicon.ico" \
   "$project_dir/organization/avatar/exports/web/favicon.svg" \
+  "$project_dir/organization/avatar/exports/web/monochrome.svg" \
   "$project_dir/organization/avatar/exports/web/apple-touch-icon-180x180.png" \
   "$project_dir/organization/avatar/exports/web/pwa-192x192.png" \
   "$project_dir/organization/avatar/exports/web/pwa-512x512.png" \
   "$project_dir/organization/avatar/exports/web/maskable-192x192.png" \
   "$project_dir/organization/avatar/exports/web/maskable-512x512.png"; do
+  require_file "$file"
+done
+
+for file in \
+  "$project_dir/organization/avatar/approved/organization-avatar.svg" \
+  "$project_dir/organization/avatar/approved/monochrome.svg"; do
   require_file "$file"
 done
 
