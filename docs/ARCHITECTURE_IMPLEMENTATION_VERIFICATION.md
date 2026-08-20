@@ -204,4 +204,94 @@ These distinctions must be retained in capability and support documentation. Imp
 
 ## Remaining verification boundary
 
-External-system assumptions—especially current Home Assistant MQTT Discovery behavior—still require current primary documentation. Retention/pruning policies also need their own implementation review; they are storage policy rather than a hardware/protocol limitation.
+Retention/pruning policies still need their own implementation review; they are storage policy rather than a hardware/protocol limitation. Current Home Assistant assumptions are verified below.
+
+## External-system verification: Home Assistant MQTT
+
+### Primary sources and review date
+
+Reviewed 2026-08-20 against current official Home Assistant documentation:
+
+- [MQTT integration and discovery](https://www.home-assistant.io/integrations/mqtt/)
+- [MQTT Sensor](https://www.home-assistant.io/integrations/sensor.mqtt/)
+- [Sensor device classes](https://www.home-assistant.io/integrations/sensor/)
+- [Developer sensor entity model](https://developers.home-assistant.io/docs/core/entity/sensor/)
+
+Home Assistant behavior is an external compatibility target, not a Health Hub authority. Reverify these contracts when implementing or upgrading the adapter.
+
+### Discovery topics and stable identity
+
+Component discovery uses:
+
+```text
+<discovery_prefix>/<component>/[<node_id>/]<object_id>/config
+```
+
+The default discovery prefix is `homeassistant`, but it is configurable. Current guidance says that, for an entity with `unique_id`, using that value as `object_id` and omitting `node_id` is best practice. The topic layout in the older Health Hub source is therefore illustrative rather than final.
+
+Home Assistant assigns an `entity_id` when the entity is first loaded. A configured `unique_id` lets a user rename the entity while preserving its Entity Registry identity. Device-registry grouping works only when `unique_id` is set and the discovery payload supplies a `device` context with at least one identifier or connection.
+
+Health Hub consequence:
+
+- Generate machine-stable, opaque `unique_id` and device identifiers.
+- Never derive them from a person's mutable display name, physical-device replacement alone, or entity label.
+- Keep friendly names in discovery display fields.
+- Decide deliberately whether Home Assistant's device represents a logical person/source grouping, a physical device, or the Hub. Do not make one HA device entry stand for several identity domains accidentally.
+
+### Discovery lifecycle
+
+Home Assistant accepts retained discovery configuration, but its current documentation describes responding to Home Assistant's birth message as the better approach. The default birth topic is `homeassistant/status`. A publisher should subscribe for that message and republish discovery, with randomized delay when many entities would otherwise create broker load.
+
+Publishing an empty payload to a discovery topic removes the component; retained discovery must be cleared so removed or renamed capabilities do not return as ghost entities. Updating a valid discovery topic updates its configuration. Device-based discovery has additional migration and removal rules, including stable matching `unique_id` and device identifiers.
+
+Health Hub consequence:
+
+- Implement discovery as reconciled desired state, not append-only publication.
+- Republish after Home Assistant birth and after relevant Hub configuration/capability changes.
+- Track previously published topics and clear obsolete retained configurations explicitly.
+- Rate-limit or jitter bulk republishing.
+
+### State retention, expiry, and availability
+
+Retained state gives a newly subscribed entity an immediate last-known value. It does not mean that value is fresh or authoritative. Home Assistant warns that retained messages survive publisher and broker restarts and can create ghost entities.
+
+For MQTT Sensor, `expire_after` can mark a sensor unavailable when no update arrives. The official sensor documentation specifically discourages retaining state when `expire_after` is used: after restart, the broker can replay an old retained value and make an expired sensor appear available again. Home Assistant already stores/restores sensor state and tracks remaining expiry time.
+
+Availability topics represent publisher/device availability. A sensor can use one `availability_topic` or multiple availability entries with an availability mode; these must not be confused with measurement freshness. Home Assistant birth/will behavior also does not prove that a daemon has recently contacted its physical device.
+
+Health Hub consequence:
+
+- Keep Hub service availability, daemon/device availability, measurement freshness, and last-known value as distinct concepts.
+- Do not combine retained state with `expire_after` without a tested design that avoids stale resurrection.
+- Prefer an explicit availability topic for Hub-published entities and expose measurement age separately.
+- Never use retained MQTT state as the Hub's durable ingestion or historical source.
+
+### Sensor classes, units, and statistics
+
+Current Home Assistant sensor classes include:
+
+- `blood_glucose_concentration`, with `mg/dL` and `mmol/L`;
+- `temperature`, with `°C`, `°F`, or `K`;
+- `weight`, with supported mass units including `kg`, `lb`, and `st`;
+- generic `pressure`, which accepts `mmHg` and `kPa` but does not provide a complete blood-pressure observation model.
+
+There is no reviewed native sensor device class for a compound blood-pressure reading, SpO2 session, or complete O2Ring session. Systolic, diastolic, pulse, SpO2, and session summaries may need separate sensor entities with careful names and units. Device class must not be invented merely to obtain an icon.
+
+Point-in-time health readings are measurements, not monotonically increasing totals. If long-term statistics are enabled, `state_class: measurement` is the plausible class for compatible numeric entities; `total` and `total_increasing` are not appropriate. Exact recorder/statistics behavior should be integration-tested before promising historical charts.
+
+Home Assistant warns against frequently changing timestamp attributes and unnecessary `force_update`, because they cause additional state writes. Separate timestamp sensors are preferable when timestamps need first-class entity behavior.
+
+### Compatibility disposition
+
+The source architecture is correct that Home Assistant must remain optional and capability-driven. The following refinements are required:
+
+1. Generic normalized MQTT remains independent from Home Assistant discovery.
+2. Discovery is generated by a Hub adapter from actual supported capabilities.
+3. Stable opaque IDs, explicit device context, and lifecycle cleanup are mandatory.
+4. Birth-triggered reconciliation is preferred over relying only on retained discovery.
+5. Retained current state is optional and must not be paired casually with expiry.
+6. Availability and freshness remain separate.
+7. Only official device classes and exact supported units are used.
+8. O2Ring raw session samples are not expanded into hundreds of Home Assistant entities.
+9. Home Assistant receives projections, not daemon authority or clinical interpretation.
+10. Broker ACLs remain a deployment security responsibility; Home Assistant discovery does not enforce the project's subscribe-only policy for external clients.

@@ -142,11 +142,11 @@ Preserve the REST/event split. Define a machine-stable topic namespace using opa
 
 The HA addendum largely duplicates Foundation sections 30–39. Both correctly make Home Assistant optional, generate discovery from actual capabilities, preserve stable logical identity across device replacement where appropriate, and separate Hub/device availability from measurement freshness.
 
-Discovery topic formats, identifiers, device/entity grouping, retained cleanup, configuration-change behavior, supported units/device classes, and availability semantics depend on current Home Assistant requirements. Per-sample O2Ring entities are explicitly rejected; useful summaries are acceptable.
+Current official Home Assistant documentation confirms component discovery, stable `unique_id`, device-registry grouping, availability topics, configuration updates, and removal through empty discovery payloads. It accepts retained discovery but prefers republishing after the Home Assistant birth message. Its MQTT Sensor documentation warns against retaining sensor state when using `expire_after`, because a stale replay can make an expired sensor appear available again. Per-sample O2Ring entities remain explicitly rejected; useful summaries are acceptable.
 
 ### Proposed disposition
 
-Keep a generic normalized MQTT contract independent of Home Assistant and implement discovery as an adapter. Use stable opaque unique IDs, publish only capability-supported entities, and remove obsolete retained discovery records when configuration changes. Verify the exact contract against current official Home Assistant documentation before implementation.
+Keep a generic normalized MQTT contract independent of Home Assistant and implement discovery as an adapter. Use stable opaque unique IDs and device identifiers, publish only capability-supported entities, reconcile after Home Assistant birth and configuration changes, and clear obsolete retained discovery. Keep state retention, expiry, availability, and freshness separate. Reverify the official contract when the adapter is implemented or upgraded.
 
 ## AR-008: Browser UI, dashboards, displays, sessions, and input
 
@@ -285,7 +285,7 @@ These claims are not accepted as current merely because Preliminary section 28 l
 | CR-009 | Each daemon generates its own device-specific PDFs. | Confirmed; current on-demand API generation is synchronous rather than a durable asynchronous job. |
 | CR-010 | Daemon retention/pruning exists and is covered by `test_prune.py`. | Deferred to a separate storage-policy review; not established by the hardware/protocol pass. |
 | CR-011 | Current service units, users, paths, dependencies, and update procedures match the preliminary deployment model. | Unit files, daemon-specific users, paths, and dependencies inspected; installed runtime and update behavior not tested. |
-| CR-012 | Current Home Assistant discovery requirements match the proposed topics, retained state, IDs, units, and availability model. | Current official Home Assistant documentation required. |
+| CR-012 | Current Home Assistant discovery requirements match the proposed topics, retained state, IDs, units, and availability model. | Verified with refinements: stable IDs/device context and cleanup are required; birth-triggered republishing is preferred; retained sensor state conflicts with naive `expire_after` use. |
 
 ## Cross-document conclusion
 
