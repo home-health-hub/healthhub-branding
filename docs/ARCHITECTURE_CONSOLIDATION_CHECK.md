@@ -106,8 +106,10 @@ One omission was corrected during this check: operational logging is now disting
 - Added the owner-approved recent-reauthentication and execution-time revalidation boundary for high-risk Web UI actions, including accessible consequence summaries and narrowly used typed confirmations.
 - Added the owner-approved account-disable lifecycle: revoke access, preserve the person and health history, suspend affected delegations for explicit review, and protect the sole active SHA.
 - Added the owner-approved fixed service-control boundary: safe application actions and allowlisted restarts are capability-scoped, while arbitrary service commands and host administration remain outside the browser.
+- Added the owner-approved update-information boundary: trusted metadata and readiness reporting before host-side installation, verified migration/health reporting afterward, and no browser-controlled update sources or execution.
 - Added the owner-approved audit interface boundary: scoped read-only search, data-minimized schema-versioned export with reauthentication, and persistent handling of integrity failure.
 - Added the owner-approved daemon-configuration UI boundary: versioned schema-driven forms, daemon-side validation and storage, read-only unknown fields, redacted diagnostics, and truthful per-daemon partial results.
+- Added the owner-approved MQTT-administration boundary: separate connectivity/authentication/TLS/ACL/event/retained-state checks, synthetic previews, known-good rollback, and no general broker tooling.
 - Added the owner-approved notification-center boundary: capability scoping, data-minimized previews, occurrence-preserving deduplication, distinct acknowledgment/resolution, and persistent required notices.
 - Added the owner-approved attention-first administration overview with capability-scoped operational summaries, no health-content previews, precise state semantics, and accessible refresh behavior.
 - Added the owner-approved individual role-management workflow with capability/effective-permission previews, separation-of-duty warnings, reauthentication, immediate revocation, and sole-SHA protection.
@@ -116,5 +118,6 @@ One omission was corrected during this check: operational logging is now disting
 - No contradiction was found between database-authoritative signed-in theme preferences and the architecture, because detailed theme state is delegated rather than restated.
 - MQTT, backup, and Home Assistant details remain candidates for focused contracts; their absence is explicit and does not waive the current architectural boundary.
 - The owner-approved advanced backup and rclone Web UI boundary is retained in architecture §13. Field-level provider schemas and backup-service operations remain for the future focused backup contract.
+- Added the owner-approved storage-administration boundary: precise state semantics, no filesystem browser, component-owned fixed cleanup, no Hub deletion of daemon readings, last-copy protection, and audited partial results.
 - Added the owner-approved granular health-data delegation workflow, including optional expiration, separate redelegation, access previews, download irreversibility, and audited lifecycle changes.
 - Emergency access, minors/dependents, incapacity, default or maximum delegation-expiration policy, account deletion, recovery succession, and audit retention remain deferred owner-policy work rather than consolidation omissions.

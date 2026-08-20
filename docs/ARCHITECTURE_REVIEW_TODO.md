@@ -81,6 +81,27 @@ Review one category at a time. Record evidence and proposed dispositions before 
 - [ ] Adopt a canonical specification only after explicit approval.
 - [ ] Decide separately whether the three source documents remain historical, become pointers, or are archived.
 
+## Deferred mail-service discussion
+
+Do not treat the following as adopted architecture. Revisit it with the project
+owner before changing the consolidated specification or implementation plans.
+
+- [ ] Decide whether Lightr should replace Mailpit as the local household mail
+  service. The review must cover per-account mailbox isolation, local-only
+  operation, password-reset delivery, external-email fallback, report delivery,
+  backup and recovery, security maintenance, and deployment ownership.
+- [ ] If Lightr is selected, decide whether the optional browser mail client is
+  SnappyMail, LilMail, a limited Hub-integrated mailbox view, or no bundled
+  webmail. Compare accessibility, mouse/touch/keyboard support, account and
+  session isolation, IMAP/SMTP compatibility, maintenance maturity, resource
+  use, dependencies, update handling, and unnecessary exposed features.
+- [ ] Keep mailbox credentials separate from Health Hub passwords. Define the
+  authentication and credential handoff model before choosing a webmail client;
+  do not expose Lightr's administrative or general service API directly to
+  household users.
+- [ ] Retain the currently documented Mailpit architecture until an explicit
+  replacement decision is approved and recorded.
+
 ## Publishing cadence
 
 Complete and publish one coherent review category before moving to the next category. A review pull request may add findings and approved dispositions, but must not modify the three protected Health Hub source documents.
