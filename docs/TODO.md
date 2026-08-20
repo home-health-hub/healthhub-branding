@@ -58,11 +58,11 @@ Resolve these in Health Hub and daemon implementation plans. The highest-priorit
 
 ### Daemon state and availability
 
-- [ ] Keep unrelated Hub functions usable when one daemon is offline and label cached data with its last successful update.
-- [ ] Define timeouts that move abandoned Syncing states to Unknown or Error.
-- [ ] Resume or retrieve daemon-owned synchronization state after the browser closes instead of starting a duplicate job.
-- [ ] Keep standalone daemon synchronization, durable data access, operational status, and PDF APIs functional without Health Hub.
-- [ ] Define how primary and secondary facts appear when Error, Syncing, Offline, or Attention conditions overlap.
+- [x] Keep unrelated Hub functions usable under the independent-availability contract in `docs/ADOPTION.md` and label cached data with its last successful refresh.
+- [x] Move abandoned `Syncing` presentation to `Unknown`, `Error`, or `Interrupted` under the daemon-authoritative timeout contract in `docs/ADOPTION.md`.
+- [x] Resume presentation by retrieving daemon-owned state under the synchronization-recovery contract in `docs/ADOPTION.md` instead of starting a duplicate job after the browser closes.
+- [x] Keep synchronization, durable data access, operational status, and PDF APIs functional without Health Hub under the standalone-daemon contract in `docs/ADOPTION.md`.
+- [x] Present overlapping `Error`, `Syncing`, `Offline`, and `Attention` facts under the scoped-status contract in `docs/ADOPTION.md`.
 
 ### Charts and measurement data
 
