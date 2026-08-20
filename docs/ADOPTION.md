@@ -282,6 +282,88 @@ The database preference and browser cache may contain `light`, `dark`, `system`,
 - Status details identify their scope, timestamp, safe explanation, and available next action.
 - Screen-reader announcements report meaningful primary transitions only, while secondary facts remain programmatically available on demand.
 
+### Measurement-conversion contract
+
+- The daemon preserves the original numeric value, original unit, source precision, and raw device representation when available.
+- A conversion creates a display or canonical value and never replaces or rewrites the stored original.
+- Record the canonical conversion method or version when conversion affects an API response, export, comparison, or report.
+- Convert from the original value rather than from an already rounded display value.
+- Round only for presentation, using documented rules appropriate to the measurement type and target unit.
+- Show the selected display unit prominently and make the original value and unit available in reading details.
+- For manual entry, preserve the value, unit, and precision as entered and additionally store a canonical value when comparison requires it.
+- Changing preferred display units re-renders historical data without modifying stored readings.
+- Charts, tables, summaries, and PDFs apply consistent conversions and identify their displayed units.
+- Comparisons and thresholds use an explicitly documented canonical representation and avoid floating-point equality at meaningful boundaries.
+- API fields distinguish original, canonical, and display values rather than overloading one value field.
+
+### Reading identity and ordering contract
+
+- A timestamp is not a unique reading identifier. Preserve distinct readings that share the same effective `taken_at`, including readings from one device.
+- Deduplicate only by a daemon-defined stable source record ID or an exact, documented source fingerprint; matching time and value alone is insufficient.
+- Preserve device, daemon, synchronization or import job, transport record, raw-payload reference or hash, and receipt time as provenance when available.
+- Accept readings received out of chronological order without rewriting their taken time or treating them silently as the newest measurement.
+- Sort presentation first by reliable effective `taken_at`, then by deterministic provenance such as `received_at` and stable record ID.
+- Mark uncertain or corrected times and keep them accessible rather than forcing them into a falsely precise order.
+- When several readings occupy identical chart coordinates, retain every point and provide keyboard- and touch-accessible inspection of each reading.
+- Summaries document whether all same-time readings are included and never silently select one.
+- A later duplicate determination creates an auditable linkage or exclusion and does not destructively delete the original record.
+- Pagination and synchronization cursors combine stable identity and ordering fields so late-arriving readings are not skipped.
+
+### Unknown measurement-time contract
+
+- Keep `taken_at` absent when the measurement time is unknown. Never copy `entered_at`, `received_at`, synchronization time, or a file timestamp into it.
+- Record `entered_at` as the time a manual record was committed and `received_at` as the trusted ingestion time.
+- In lists and details, show `Taken at: Unknown` and present `Entered at` or `Received at` separately with its correct label.
+- A measurement-time chart does not place an unknown-time reading on a fabricated date.
+- Keep unknown-time readings visible in an accessible separate section or list.
+- Summaries and date-range reports explicitly define whether unknown-time readings are excluded, included separately, or selected by receipt or entry range.
+- If a person later supplies measurement time, retain the original record state and add an auditable correction with actor, reason, and correction time.
+- API filters distinguish measurement-time range from receipt-time and entry-time ranges.
+- PDFs state how unknown-time readings were handled and never label entry or receipt time as measurement time.
+
+### Report supersession contract
+
+- A generated PDF is immutable for its `report_id`; never rewrite or replace its bytes.
+- Reading corrections and exclusions are append-only audited changes that preserve the earlier state and the reason for change.
+- A report uses the data state effective at generation and receives a new `report_id`.
+- New report metadata may identify an older report as `supersedes`; retain the older report until its normal content-retention expiry.
+- Report metadata outlives downloadable content and retains its hash, generation time, resolved inputs, included reading IDs and versions or a reproducible snapshot reference, and supersession links.
+- Never add a banner, watermark, page, annotation, or other modification to a historical PDF after generation.
+- Health Hub may state separately that a newer report exists while leaving the older daemon-produced PDF unchanged.
+- When a correction or exclusion affects a requested period, offer a new report instead of silently changing the old one.
+- Regeneration is not byte-for-byte reproduction: it receives a new ID and may reflect later corrections, exclusions, report-format versions, or other approved data changes.
+- Audit records identify the actor, time, and reason for a correction or exclusion and the later reports that incorporated it.
+
+### Dense-chart aggregation contract
+
+- Aggregation is a presentation optimization and never creates replacement measurement records.
+- The daemon remains the source of every underlying reading and its provenance.
+- Select aggregation according to chart pixel width and requested time range rather than applying hidden permanent data reduction.
+- Prefer a method that preserves visible shape and extremes, such as minimum and maximum envelopes with a representative value, instead of a simple average alone.
+- Label an aggregated view and identify its bucket interval or method.
+- Selecting or focusing a bucket reveals its reading count, time span, minimum, maximum, and displayed representative value.
+- Provide an accessible table, list, or drill-down exposing every underlying reading in a bucket.
+- Zooming or narrowing the time range retrieves or renders progressively finer data until individual readings appear.
+- Do not connect across missing-data gaps in a way that implies measurements occurred.
+- Alerts, thresholds, calculations, and PDF source data operate on underlying readings rather than chart pixels or aggregated points.
+- Aggregation is deterministic for the same input data, range, pixel width, and method version.
+- APIs distinguish raw-reading endpoints from optional display-aggregation endpoints.
+
+### Accessible-chart encoding contract
+
+- Never distinguish a series, source, threshold, or state by color alone.
+- Combine reviewed contrast-safe colors with marker shapes, line styles, direct labels, or patterns.
+- Assign distinctions for the current chart's series set rather than using permanent manufacturer colors.
+- Keep each series mapping consistent across chart, legend, tooltip, accessible table, and PDF.
+- Use direct labels where space permits; otherwise provide a visible legend adjacent to the chart.
+- Ensure meaningful lines, markers, focus indicators, and boundaries meet applicable WCAG non-text contrast requirements against their backgrounds and adjacent series.
+- Provide larger invisible pointer targets around thin visible lines or markers without changing their visual meaning.
+- In grayscale, every series and threshold remains identifiable through shape, dash pattern, label, or position.
+- Dark mode uses reviewed accent derivatives rather than automatic inversion.
+- Forced-colors mode uses system colors together with shape, line style, and text labels.
+- Every chart has a text summary and accessible reading table independent of its visual encoding.
+- Test Light, Dark, grayscale, forced colors, common color-vision deficiencies, keyboard focus, touch selection, and printed or PDF output.
+
 The Hub may copy approved organization, Hub, application, and navigation artwork required by its pages. It does not copy README banners into the application.
 
 ## Daemon adoption

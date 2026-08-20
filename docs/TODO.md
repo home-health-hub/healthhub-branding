@@ -66,12 +66,12 @@ Resolve these in Health Hub and daemon implementation plans. The highest-priorit
 
 ### Charts and measurement data
 
-- [ ] Preserve original values and units when displaying conversions.
-- [ ] Retain duplicate timestamps and out-of-order readings without silently merging or misordering provenance.
-- [ ] Do not substitute `Entered at` for a missing `Taken at` without an explicit label.
-- [ ] Keep historical PDFs immutable or explicitly superseded after a reading is corrected or excluded.
-- [ ] Aggregate dense charts only for display and retain access to underlying readings.
-- [ ] Use contrast-safe accent derivatives, marker shapes, line styles, and labels in both themes and grayscale.
+- [x] Preserve original values, units, and precision under the measurement-conversion contract in `docs/ADOPTION.md` when displaying conversions.
+- [x] Retain duplicate timestamps and out-of-order readings under the reading-identity and ordering contract in `docs/ADOPTION.md`.
+- [x] Keep missing `Taken at` values absent and present them under the unknown-measurement-time contract in `docs/ADOPTION.md`.
+- [x] Keep historical PDFs immutable and link later reports under the report-supersession contract in `docs/ADOPTION.md` after a reading is corrected or excluded.
+- [x] Aggregate dense charts only under the display-aggregation contract in `docs/ADOPTION.md` and retain access to every underlying reading.
+- [x] Use contrast-safe colors, shapes, line styles, and labels under the accessible-chart encoding contract in `docs/ADOPTION.md`.
 
 ### PDFs and APIs
 
