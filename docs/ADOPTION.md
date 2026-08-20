@@ -470,6 +470,63 @@ Start from [`templates/branding.lock.example.json`](../templates/branding.lock.e
 
 Product CI must verify that every listed destination exists and matches its checksum. An asset or token update and its lock-file update belong in the same pull request. Do not fetch branding assets at runtime or use this repository as a submodule.
 
+### Release and lock-validation contract
+
+- Consumer CI validates `branding.lock.json` against a published immutable branding release before accepting copied assets.
+- Reject development versions such as `-dev`, nonexistent tags or releases, and versions incompatible with the lock schema.
+- Require a full source commit SHA and verify that it belongs to the declared release.
+- Reject missing source assets, unapproved asset roles, invalid consumer destinations, and duplicate destination mappings.
+- Verify the source release checksum and the copied destination checksum.
+- Validate that each asset role matches its allowed use and destination, such as favicon, launcher icon, daemon navigation image, or token file.
+- Reject source or destination paths that escape the repository or approved asset directory.
+- Verification never fetches, modifies, or repairs branding automatically; it reports the exact mismatch and fails.
+- A lock update and its copied-file update belong in the same commit or pull request.
+- Record the lock schema and verifier version so validation behavior is reproducible.
+- If signed branding releases are introduced, extend verification to their published provenance or signature.
+
+### Token compatibility and versioning contract
+
+- Treat published token names and meanings as a versioned public contract for consumer repositories.
+- Removing, renaming, retyping, changing units, or changing the semantic role of a token requires a major branding version.
+- Never reuse a retired token name for a different purpose, including in a major release; introduce a new name.
+- Adding a backward-compatible token requires a minor release.
+- Documentation-only corrections with no generated-output change may use a patch release.
+- A value adjustment that preserves the documented semantic role may be minor or patch according to visual impact, but still passes contrast and specimen verification.
+- Deprecate before removal where practical, document the replacement, and retain the old token through the current major version.
+- Generated CSS and source JSON expose the same token set and compatible value types.
+- Release CI compares against the previous release and fails when the declared version is too small for detected contract changes.
+- Release notes list added, deprecated, removed, renamed, and semantically changed tokens with consumer migration guidance.
+- Consumers pin exact branding releases and never receive token contract changes automatically.
+
+### Branding release-completeness contract
+
+- Each branding release is an atomic, self-consistent set of approved source assets, generated exports, tokens, documentation, checksums, and manifest metadata.
+- Define required files and roles in a release manifest; CI rejects a release missing a required member.
+- When a source image changes, regenerate and verify every declared derivative before release.
+- When a token affects artwork surfaces, contrast, charts, or specimens, update and verify those dependent artifacts in the same release.
+- Never publish from a commit containing stale generated files or checksums.
+- The version, source commit, manifest, `SHA256SUMS`, generated CSS, and documentation agree.
+- Create a release only after reproducible-build, checksum, asset-role, token, contrast, and specimen checks pass.
+- Consumers update to one exact release and do not combine tokens from one release with images from another.
+- Emergency correction releases still contain a complete coherent set when only one source asset changed.
+- Document intentional asset removals and their migration path; do not represent omission as an accidental missing file.
+- CI builds the candidate release in a clean temporary checkout so untracked local files cannot complete an otherwise incomplete release.
+
+### Consumer branding-verification contract
+
+- Every consumer repository commits `branding.lock.json` together with the exact copied assets and tokens it declares.
+- CI validates lock schema, pinned release, full source commit, allowed roles, source paths, destination paths, and SHA-256 values.
+- Recompute each destination checksum from the consumer worktree rather than trusting the checksum written in the lock.
+- Reject missing files, unexpected replacements, duplicate destinations, path escapes, and content that does not match the pinned release.
+- Verify generated token files against their declared source token file and generator version where applicable.
+- Require every managed branding destination to appear in the lock so a manual replacement cannot remain untracked.
+- Permit unrelated consumer-owned images only outside branding-managed paths or through an explicit allowlist.
+- Run routine verification without network access using checked-in lock data and a pinned release manifest and checksum set; refresh release provenance separately.
+- Report the exact asset, expected checksum, actual checksum, source release, and remediation command.
+- Verification never modifies the consumer worktree.
+- A branding update changes copied files and lock data together and passes the consumer's normal visual and accessibility checks.
+- Local verification and CI use the same pinned verifier version and command.
+
 ## Required verification
 
 Health Hub implementation review includes:

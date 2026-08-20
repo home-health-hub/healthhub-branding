@@ -84,7 +84,7 @@ Resolve these in Health Hub and daemon implementation plans. The highest-priorit
 
 ### Branding distribution
 
-- [ ] Reject lock files that reference an unreleased version, missing commit, wrong asset role, or mismatched destination checksum.
-- [ ] Treat removed or semantically changed token names as a breaking branding release.
-- [ ] Require a coherent branding release when tokens and images are updated partially.
-- [ ] Verify copied consumer assets and tokens against `branding.lock.json` in consumer CI.
+- [x] Reject invalid branding locks under the release and lock-validation contract in `docs/ADOPTION.md`.
+- [x] Version token names and semantics under the token-compatibility contract in `docs/ADOPTION.md`.
+- [x] Publish tokens, images, generated exports, documentation, and checksums as one coherent release under the release-completeness contract in `docs/ADOPTION.md`.
+- [x] Verify every managed consumer asset and token under the offline consumer-verification contract in `docs/ADOPTION.md`.
