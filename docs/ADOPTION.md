@@ -139,6 +139,23 @@ The database preference and browser cache may contain `light`, `dark`, `system`,
 - Keep keyboard focus indicators visible and distinct from hover styling.
 - Test mixed sequences on touchscreen computers: touch then keyboard, mouse then touch, and keyboard while pointer hover remains active.
 
+### Project persistence contract
+
+- Use SQLite for every persistent Health Hub and daemon application database. Keep each database in that component's configurable private data directory on local storage rather than a repository checkout, package or container image, or network filesystem. Device-driver libraries that do not own persistent application state do not need a database.
+- Give Health Hub and every daemon a separate database, schema, SQLAlchemy model set, and Alembic revision history. A component owns and migrates only its own database.
+- The Hub database stores Hub-owned state such as accounts, sessions, preferences, person and device mappings, daemon registrations, audit references, and Hub records of daemon-owned jobs. Each daemon database remains authoritative for that daemon's measurements, device state, jobs, report metadata, and other durable operational state.
+- Never open, attach, migrate, or write another component's SQLite file. Health Hub exchanges data and state through each daemon's versioned API and receives near-real-time reading events through the documented MQTT channel.
+- Use SQLAlchemy with its 2.0-style APIs: `DeclarativeBase`, typed `Mapped` attributes, `mapped_column`, `select()`, explicit engines and sessions, and transaction scopes such as `Session.begin()`. Do not introduce legacy `Query`, implicit autocommit, bound metadata, or connectionless execution.
+- Keep transaction boundaries explicit and short. Do not hold a database transaction open while calling a daemon, publishing to MQTT, generating a report, sending a notification, or waiting for user input.
+- Enable SQLite foreign-key enforcement for every connection. Configure a bounded busy timeout, use write-ahead logging when supported by the deployment filesystem, and treat lock contention as a retryable bounded operational condition rather than an invitation to retry forever.
+- Use one documented SQLAlchemy session per request, worker operation, or explicit unit of work. Do not share sessions across threads, tasks, requests, or background jobs. Choose synchronous or asynchronous database access deliberately and do not mix their session types.
+- Use Alembic as the only production schema-migration mechanism. Application startup may verify the schema revision but must not call `create_all()` to repair or silently change an existing production database.
+- Give constraints and indexes stable names through a SQLAlchemy naming convention so Alembic revisions remain deterministic and reviewable. Every schema change receives a checked-in revision with a clear upgrade path and any required data transformation.
+- Run each component's migrations once under an exclusive deployment or service-management step before that component's normal workers start. Multiple web, daemon, or background workers must not race to migrate the same database.
+- Test each revision against both a fresh empty database and a copy at every supported prior release revision. Verify application startup at the new revision and verify that a newer, unsupported database revision fails safely with an actionable message.
+- Back up each affected database before a destructive or long-running migration using SQLite's online backup API or another SQLite-safe method. Do not copy a live database file without accounting for its WAL state. Document restoration per component and retain the pre-migration backup until the upgraded service has been verified.
+- Set restrictive file and directory permissions, exclude every database and backup file from source control, and never expose SQL statements, health data, credentials, or raw database errors to ordinary users.
+
 ### Function, device, and source contract
 
 - Keep primary Hub navigation function-led. Manufacturer and model remain secondary device metadata.
