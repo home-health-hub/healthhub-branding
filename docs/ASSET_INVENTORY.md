@@ -18,6 +18,7 @@ This inventory records the initial assets consolidated into this project. Reposi
 | Trividia TRUE METRIX | Warm gold | Banner, application image, navigation icon | Hybrid SVGs preserve approved rasters |
 | Viatom O2Ring | Oxygen blue with coral pulse | Banner, application image, navigation icon | Hybrid SVGs preserve approved rasters |
 | Easy@Home BBT | Cycle plum | Banner, application image, navigation icon | Hybrid SVGs preserve approved rasters |
+| Health thermometer | Coral infrared and temperature accent | Banner, application image, navigation icon | Hybrid SVGs preserve approved rasters |
 
 Each product's approved files are under `daemons/<product>/approved/`. Generated SVG and PNG derivatives are under `exports/`.
 
