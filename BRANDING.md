@@ -31,6 +31,10 @@ The artwork uses gradients, so these values are anchors rather than strict singl
 
 The Bluetooth icon uses the same teal-to-turquoise treatment in every repository. Device-specific colors belong on the measurement path or related detail, not on the Bluetooth mark.
 
+## Interface and report presentation
+
+Typography, operational status colors, Hub presentation of daemon-backed functions, and daemon-generated PDF presentation are defined in [`docs/INTERFACE_AND_REPORT_STANDARDS.md`](docs/INTERFACE_AND_REPORT_STANDARDS.md). Health Hub owns browser presentation; daemons retain synchronization, data, API, and report authority.
+
 ## README banners
 
 README banners use a 3:1 landscape canvas. Keep the repository name exact, prominent, and limited to one appearance. At normal GitHub README width, the device and connection method should remain identifiable without relying on small labels.
@@ -90,11 +94,11 @@ Keep the following roles distinct:
 
 - The organization avatar identifies Home Health Hub as an organization and the single installed Health Hub application.
 - The Health Hub image identifies the main hub in documentation and larger interface placements.
-- Daemon application images identify device functions in dashboards, page headers, reports, PDFs, and repository documentation.
+- Daemon application images identify device functions in Hub dashboards, page headers, and repository documentation.
 - Daemon navigation icons are simplified artwork for Health Hub tiles, menus, and other small interface placements.
 - README banners are repository-specific landscape artwork and are not application-launcher icons.
 
-Device-specific imagery must not be used as an Ubuntu application launcher. Daemon interfaces are reached through Health Hub after the user signs in.
+Device-specific imagery must not be used as an Ubuntu application launcher. Health Hub presents daemon-backed functions after the user signs in; daemons do not provide separate browser interfaces.
 
 ## Health Hub application launcher
 

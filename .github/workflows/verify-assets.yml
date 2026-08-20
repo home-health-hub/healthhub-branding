@@ -20,7 +20,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install --yes imagemagick
 
       - name: Validate scripts
-        run: bash -n scripts/*.sh
+        run: bash -n scripts/*.sh && python3 -m py_compile scripts/*.py
 
       - name: Verify declared assets
         run: ./scripts/verify-assets.sh

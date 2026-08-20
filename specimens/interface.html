@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Health Hub interface specimen</title>
+  <link rel="stylesheet" href="../tokens/brand.css">
+  <link rel="stylesheet" href="specimen.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">Home Health Hub branding reference</p>
+      <h1>Interface specimen</h1>
+      <p>This static page demonstrates shared presentation rules. It is not a production Hub interface.</p>
+    </div>
+    <label class="theme-control">
+      Preview theme
+      <select id="theme-select">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </label>
+  </header>
+
+  <main id="main">
+    <section aria-labelledby="type-heading">
+      <h2 id="type-heading">Typography and controls</h2>
+      <div class="panel type-sample">
+        <h3>Clear health information</h3>
+        <p>Body text uses Atkinson Hyperlegible Next when available and a system fallback otherwise.</p>
+        <p class="supporting">Supporting text remains readable and does not rely on low contrast.</p>
+        <div class="actions">
+          <button type="button">Primary action</button>
+          <a class="button secondary" href="#tiles-heading">View health functions</a>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="tiles-heading">
+      <h2 id="tiles-heading">Health-function tiles</h2>
+      <p>Images are decorative here because each visible title already names the function.</p>
+      <div class="tile-grid">
+        <a class="health-tile selected" href="#daemon-page">
+          <img src="../daemons/etekcity-scale-daemon/approved/navigation-icon.png" alt="">
+          <span class="tile-copy"><strong>Weight</strong><span>Ready</span></span>
+        </a>
+        <a class="health-tile" href="#daemon-page">
+          <img src="../daemons/etekcity-bp-daemon/approved/navigation-icon.png" alt="">
+          <span class="tile-copy"><strong>Blood Pressure</strong><span>Last synced 9:42 AM</span></span>
+          <span class="badge" aria-label="3 readings awaiting review">3</span>
+        </a>
+        <a class="health-tile" href="#daemon-page">
+          <img src="../daemons/trividia-truemetrix-daemon/approved/navigation-icon.png" alt="">
+          <span class="tile-copy"><strong>Blood Glucose</strong><span class="status attention">Attention</span></span>
+        </a>
+        <a class="health-tile" href="#daemon-page">
+          <img src="../daemons/viatom-o2ring-daemon/approved/navigation-icon.png" alt="">
+          <span class="tile-copy"><strong>Oxygen Saturation</strong><span class="status syncing">Syncing</span></span>
+        </a>
+        <div class="health-tile disabled" aria-disabled="true">
+          <img src="../daemons/easyathome-bbt-daemon/approved/navigation-icon.png" alt="">
+          <span class="tile-copy"><strong>Basal Body Temperature</strong><span>Unavailable: daemon offline</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="status-heading">
+      <h2 id="status-heading">Operational statuses</h2>
+      <div class="status-list" role="list">
+        <span class="status ready" role="listitem">Ready</span>
+        <span class="status syncing" role="listitem">Syncing</span>
+        <span class="status attention" role="listitem">Attention</span>
+        <span class="status error" role="listitem">Error</span>
+        <span class="status offline" role="listitem">Offline</span>
+        <span class="status unknown" role="listitem">Unknown</span>
+      </div>
+    </section>
+
+    <section id="daemon-page" aria-labelledby="daemon-heading">
+      <h2 id="daemon-heading">Hub-rendered daemon page identity</h2>
+      <div class="panel daemon-heading">
+        <img src="../daemons/etekcity-bp-daemon/approved/application-icon.png" alt="">
+        <div>
+          <p class="eyebrow">Health function</p>
+          <h3>Blood Pressure</h3>
+          <p>The approved daemon image identifies this Hub-rendered page. The visible title supplies its accessible name.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="chart-heading">
+      <h2 id="chart-heading">Accessible chart treatment</h2>
+      <div class="panel chart-layout">
+        <figure>
+          <svg class="chart" viewBox="0 0 640 260" role="img" aria-labelledby="chart-title chart-desc">
+            <title id="chart-title">Example measurement trend</title>
+            <desc id="chart-desc">Five readings rise gradually, followed by a missing interval and a final lower reading.</desc>
+            <g class="grid" aria-hidden="true">
+              <path d="M60 40H620M60 100H620M60 160H620M60 220H620"></path>
+              <path d="M60 40V220M200 40V220M340 40V220M480 40V220M620 40V220"></path>
+            </g>
+            <g class="axes" aria-hidden="true">
+              <path d="M60 35V220H625"></path>
+              <text x="12" y="45">High</text>
+              <text x="18" y="225">Low</text>
+              <text x="55" y="246">Mon</text>
+              <text x="330" y="246">Wed</text>
+              <text x="590" y="246">Fri</text>
+            </g>
+            <g class="series" aria-hidden="true">
+              <path d="M70 190L150 170L230 150L310 125L390 105"></path>
+              <path d="M540 145L610 165"></path>
+              <circle cx="70" cy="190" r="6"></circle><circle cx="150" cy="170" r="6"></circle>
+              <circle cx="230" cy="150" r="6"></circle><circle cx="310" cy="125" r="6"></circle>
+              <circle cx="390" cy="105" r="6"></circle><circle cx="540" cy="145" r="6"></circle>
+              <circle cx="610" cy="165" r="6"></circle>
+            </g>
+            <text class="gap-label" x="430" y="132">No reading</text>
+          </svg>
+          <figcaption>Example only. A visible gap represents missing data rather than implying continuity.</figcaption>
+        </figure>
+        <div>
+          <h3>Text summary</h3>
+          <p>Measurements rose across five readings. No reading was available for the next interval. The final two readings were lower.</p>
+          <table>
+            <caption>Example underlying values</caption>
+            <thead><tr><th scope="col">Day</th><th scope="col">Value</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Monday</th><td>Example 1</td></tr>
+              <tr><th scope="row">Wednesday</th><td>Example 2</td></tr>
+              <tr><th scope="row">Friday</th><td>Example 3</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="messages-heading">
+      <h2 id="messages-heading">Empty and error states</h2>
+      <div class="message-grid">
+        <article class="panel"><h3>No readings yet</h3><p>Connect a device or add the first reading to begin.</p><button type="button">Connect device</button></article>
+        <article class="panel error-panel"><h3>Synchronization failed</h3><p>Your existing readings were preserved. Try the synchronization again.</p><p class="supporting">Reference: SYNC-EXAMPLE</p><button type="button">Try again</button></article>
+      </div>
+    </section>
+  </main>
+
+  <footer><p>Reference implementation only. Doctor-facing PDFs intentionally use a separate, restrained presentation.</p></footer>
+  <script src="specimen.js"></script>
+</body>
+</html>

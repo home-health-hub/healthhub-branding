@@ -17,12 +17,13 @@ A `-dev` suffix marks unreleased work. Remove it only when the asset set has pas
 1. Confirm every changed image is in the correct `source/`, `approved/`, `exports/`, or `archive/` directory.
 2. Confirm no superseded or unapproved image is referenced as an approved asset.
 3. Run `./scripts/build-exports.sh`.
-4. Run `./scripts/update-checksums.sh`.
-5. Run `./scripts/verify-assets.sh`.
-6. Run `./scripts/verify-checksums.sh`.
-7. Run `./scripts/verify-reproducible-build.sh`.
-8. Review image changes at their intended display sizes.
-9. Update `VERSION` and remove the `-dev` suffix.
-10. Merge through the protected `main` branch before creating the matching tag and GitHub release.
+4. Run `./scripts/build-design-tokens.py`.
+5. Run `./scripts/update-checksums.sh`.
+6. Run `./scripts/verify-assets.sh`.
+7. Run `./scripts/verify-checksums.sh`.
+8. Run `./scripts/verify-reproducible-build.sh`.
+9. Review image changes at their intended display sizes and review token changes in both themes.
+10. Update `VERSION` and remove the `-dev` suffix.
+11. Merge through the protected `main` branch before creating the matching tag and GitHub release.
 
 The release tag should be `v` followed by the exact contents of `VERSION`, for example `v0.2.0`.

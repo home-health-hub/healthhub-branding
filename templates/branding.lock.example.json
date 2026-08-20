@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "branding_release": "0.2.0",
+  "source_commit": "0000000000000000000000000000000000000000",
+  "assets": [
+    {
+      "source": "daemons/example-daemon/approved/navigation-icon.png",
+      "destination": "static/images/navigation-icon.png",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

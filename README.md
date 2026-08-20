@@ -10,7 +10,9 @@
 
 This repository is the source of truth for Home Health Hub brand documentation and approved visual assets. It contains the organization avatar, Health Hub artwork, daemon artwork, launcher and web exports, editable or hybrid SVGs, and historically meaningful superseded assets.
 
-Start with [BRANDING.md](BRANDING.md). The current asset list and provenance are recorded in [docs/ASSET_INVENTORY.md](docs/ASSET_INVENTORY.md).
+Start with [BRANDING.md](BRANDING.md). The current asset list and provenance are recorded in [docs/ASSET_INVENTORY.md](docs/ASSET_INVENTORY.md). Shared typography, operational-status, and PDF rules are in [docs/INTERFACE_AND_REPORT_STANDARDS.md](docs/INTERFACE_AND_REPORT_STANDARDS.md). Product integration boundaries and verification are in [docs/ADOPTION.md](docs/ADOPTION.md).
+
+The dependency-free [interface specimen](specimens/interface.html) demonstrates the generated tokens, approved daemon identification images, responsive Hub tiles, statuses, accessible chart treatment, and common interface states. Open it locally in a browser; it contains no production Hub or daemon behavior.
 
 ## Repository layout
 
@@ -42,7 +44,7 @@ The export script requires ImageMagick:
 ./scripts/build-exports.sh
 ```
 
-The script creates Linux `hicolor` icons, browser and PWA icons, an ICO file, PNG presentation exports, and hybrid SVG representations for current raster-only artwork. Run `./scripts/verify-assets.sh` afterward.
+The script creates Linux `hicolor` icons, browser and PWA icons, an ICO file, PNG presentation exports, and hybrid SVG representations for current raster-only artwork. Run `./scripts/build-design-tokens.py` to regenerate `tokens/brand.css` from its JSON source. Run `./scripts/verify-assets.sh` afterward.
 
 Run `./scripts/update-checksums.sh` whenever approved assets or generated exports change. Use `./scripts/verify-checksums.sh` and `./scripts/verify-reproducible-build.sh` before review. Raster artwork uses hybrid SVGs when a native redraw would alter the approved design.
 
