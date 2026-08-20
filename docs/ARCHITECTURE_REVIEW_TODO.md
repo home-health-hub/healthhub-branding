@@ -62,7 +62,7 @@ Review one category at a time. Record evidence and proposed dispositions before 
 - [x] Verify API, storage, configuration, MQTT, report, and service claims against current source repositories; see [`ARCHITECTURE_IMPLEMENTATION_VERIFICATION.md`](ARCHITECTURE_IMPLEMENTATION_VERIFICATION.md).
 - [x] Verify hardware/protocol limitations against current daemon or driver evidence; see the hardware and protocol section of [`ARCHITECTURE_IMPLEMENTATION_VERIFICATION.md`](ARCHITECTURE_IMPLEMENTATION_VERIFICATION.md).
 - [x] Separate confirmed implementation behavior from desired architecture.
-- [ ] Record external-system assumptions requiring current primary documentation.
+- [x] Record external-system assumptions against current official Home Assistant documentation; see the external-system section of [`ARCHITECTURE_IMPLEMENTATION_VERIFICATION.md`](ARCHITECTURE_IMPLEMENTATION_VERIFICATION.md).
 
 ## Phase 4: decisions
 
