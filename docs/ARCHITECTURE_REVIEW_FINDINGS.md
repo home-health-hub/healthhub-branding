@@ -270,21 +270,21 @@ The consolidated work should label each retained item as invariant, required cap
 
 ## Implementation claim register
 
-These claims are not accepted as current merely because Preliminary section 28 labels them confirmed. They require fresh repository or primary-source evidence before consolidation.
+These claims are not accepted as current merely because Preliminary section 28 labels them confirmed. Current repository verification is recorded in [`ARCHITECTURE_IMPLEMENTATION_VERIFICATION.md`](ARCHITECTURE_IMPLEMENTATION_VERIFICATION.md); hardware and external-system claims still require their own evidence before consolidation.
 
 | ID | Claim | Review state |
 |---|---|---|
-| CR-001 | Every supported daemon exposes versioned `/api/v1` routes and `GET /api/v1/capabilities`. | Reported in source; current code verification required. |
-| CR-002 | Every supported daemon implements off-by-default MQTT publish-on-new-reading. | Reported in source and Claude Code handoff; current code/config verification required. |
-| CR-003 | All daemon HTTP servers use `aiohttp.web` and optional shared bearer tokens. | Framework-specific, dated, and not an architecture requirement. |
-| CR-004 | Every daemon uses SQLite for authoritative durable measurement storage. | Architectural requirement; current schemas and migrations require verification. |
-| CR-005 | TrueMetrix and Etekcity support nullable, after-the-fact profile assignment while O2Ring uses one wearer per daemon instance. | Reported in source; verify current schemas and endpoints. |
+| CR-001 | Every supported daemon exposes versioned `/api/v1` routes and `GET /api/v1/capabilities`. | Confirmed in the five current daemon source trees. |
+| CR-002 | Every supported daemon implements off-by-default MQTT publish-on-new-reading. | Confirmed in the five current daemon source trees; delivery/replay guarantees remain undefined. |
+| CR-003 | All daemon HTTP servers use `aiohttp.web` and optional shared bearer tokens. | Confirmed current implementation; framework-specific and not an architecture requirement. |
+| CR-004 | Every daemon uses SQLite for authoritative durable measurement storage. | Confirmed; all five use direct `sqlite3`, with no current SQLAlchemy or Alembic implementation. |
+| CR-005 | TrueMetrix and Etekcity support assignment models differing from O2Ring's configured-wearer model. | Confirmed in current schemas, configuration, and endpoints; identity must remain capability-driven. |
 | CR-006 | The BP protocol has no device-side clock and its memory slot is not a Hub profile. | Hardware/protocol evidence required. |
-| CR-007 | O2Ring live readings and downloaded sessions use distinct tables and semantics. | Reported in source; verify daemon and driver behavior. |
-| CR-008 | Daemons provide Apprise notifications and scheduled staleness/range checks. | Reported in source; verify ownership, timers, and configuration. |
-| CR-009 | Each daemon generates its own device-specific PDFs. | Required architecture; verify implemented endpoints and exact behavior separately. |
+| CR-007 | O2Ring live readings and downloaded sessions use distinct tables and semantics. | Confirmed in daemon storage and API source; driver/session-finalization behavior remains for hardware review. |
+| CR-008 | Daemons provide notifications and scheduled staleness/range checks. | Scheduled alert code/configuration and units confirmed; live provider behavior not tested. |
+| CR-009 | Each daemon generates its own device-specific PDFs. | Confirmed; current on-demand API generation is synchronous rather than a durable asynchronous job. |
 | CR-010 | Daemon retention/pruning exists and is covered by `test_prune.py`. | Test-name observation only; policy and runtime behavior remain unverified. |
-| CR-011 | Current service units, users, paths, dependencies, and update procedures match the preliminary deployment model. | Fresh packaging/systemd verification required. |
+| CR-011 | Current service units, users, paths, dependencies, and update procedures match the preliminary deployment model. | Unit files, daemon-specific users, paths, and dependencies inspected; installed runtime and update behavior not tested. |
 | CR-012 | Current Home Assistant discovery requirements match the proposed topics, retained state, IDs, units, and availability model. | Current official Home Assistant documentation required. |
 
 ## Cross-document conclusion

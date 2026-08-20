@@ -59,9 +59,9 @@ Review one category at a time. Record evidence and proposed dispositions before 
 ## Phase 3: verification
 
 - [x] Build a claim register for statements about current Hub or daemon behavior.
-- [ ] Verify API, storage, configuration, MQTT, report, and service claims against current source repositories.
+- [x] Verify API, storage, configuration, MQTT, report, and service claims against current source repositories; see [`ARCHITECTURE_IMPLEMENTATION_VERIFICATION.md`](ARCHITECTURE_IMPLEMENTATION_VERIFICATION.md).
 - [ ] Verify hardware/protocol limitations against current daemon or driver evidence.
-- [ ] Separate confirmed implementation behavior from desired architecture.
+- [x] Separate confirmed implementation behavior from desired architecture.
 - [ ] Record external-system assumptions requiring current primary documentation.
 
 ## Phase 4: decisions
