@@ -1,6 +1,6 @@
 # Health Hub architecture review findings
 
-This document records evidence and proposed dispositions during the read-only review. A proposal is not an approved architecture decision until the project owner accepts it. The protected Health Hub source documents remain unchanged.
+This document records evidence, proposed dispositions, and the project owner's approved architecture decisions from the read-only review. A proposal is not an approved architecture decision until the project owner accepts it. Approved dispositions are inputs to the future consolidated architecture specification. Rejected assumptions and unresolved implementation questions remain in the review result or approved disposition rather than being silently discarded. The protected Health Hub source documents remain unchanged.
 
 ## Finding statuses
 
@@ -11,7 +11,7 @@ This document records evidence and proposed dispositions during the read-only re
 
 ## AR-001: System scope and single-appliance assumptions
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Duplicate, Stale, Unverified, Outside scope
 
 ### Source evidence
@@ -39,7 +39,7 @@ This document records evidence and proposed dispositions during the read-only re
 - The detailed household-administration, host, and deployment model is outside branding scope and ultimately belongs in the consolidated Health Hub architecture specification.
 - `Claude-foundation.md` section 25 and `Preliminary.md` section 10 explicitly revise an earlier external-consumer-only position: the Hub subscribes to each daemon's MQTT feed for near-real-time new-reading delivery rather than polling or adding webhooks. They reserve REST for on-demand queries, configuration, reports, assignment, and capability discovery. They do not describe MQTT commands or a broader general-purpose coordination protocol.
 
-### Proposed resolution
+### Approved resolution
 
 Define the deployment boundary as follows:
 
@@ -54,13 +54,13 @@ Define the deployment boundary as follows:
 9. Device and daemon names in the source documents are examples of the initial integration set. New devices and manufacturers fit the same authority, MQTT, and API boundaries without changing the system architecture.
 10. Optional displays, Home Assistant, scripts, and other external MQTT consumers remain optional clients. They consume the Hub's interfaces but do not define the Hub-to-daemon coordination model.
 
-### Destination if approved
+### Destination
 
 The eventual consolidated Health Hub architecture specification. The branding repository should retain only the browser-presentation, daemon-authority, identification, and report boundaries that directly govern branding/interface adoption.
 
 ## AR-002: Hub, daemon, driver, and device authority
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Duplicate, Outside scope
 
 ### Review result
@@ -69,13 +69,13 @@ All three sources preserve the same core boundary: a physical device is accessed
 
 The phrase “Hub data store” must not imply that copied or normalized measurements become a second authority. Hub-owned data may include accounts, permissions, preferences, audit records, integration configuration, cached projections, and references to daemon records. A cache must retain source identity and be rebuildable or explicitly classified if it is not.
 
-### Proposed disposition
+### Approved disposition
 
 Adopt the authority chain `physical device -> driver -> daemon -> supported API/event contract -> Hub presentation`. State explicitly that normalization, caching, and aggregation do not transfer measurement authority. Keep daemon configuration and device-specific behavior in the daemon. Put the complete rule in the consolidated architecture; retain its presentation consequences in the interface/report standards.
 
 ## AR-003: Person, account, actor, profile, device, and source identity
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Conflict, Stale, Unverified
 
 ### Source evidence and conflict
@@ -84,13 +84,13 @@ The Foundation and HA addendum often model one physical device as assigned to on
 
 Those models cannot be collapsed into one universal `device -> profile` rule. A shared thermometer, scale, cuff, or manual entry may require per-record subject selection. Device memory slots are not Hub people. Accounts, people, profiles, actors, devices, daemon instances, transport identifiers, and source records are distinct identities even when a simple installation maps some one-to-one.
 
-### Proposed disposition
+### Approved disposition
 
-Use stable opaque IDs for every identity domain. Model the subject of each measurement independently from the actor and source device. Treat device-level profile assignment as a daemon-reported capability, not a universal invariant. Preserve reassignment history and actor audit data rather than rewriting provenance. Personal names in examples are display labels only and must never form stable identifiers or MQTT uniqueness keys.
+Use stable opaque IDs for every identity domain. Model the subject of each measurement independently from the actor and source device. Treat device-level profile assignment as a daemon-reported capability, not a universal invariant. Preserve reassignment history and actor audit data rather than rewriting provenance. Personal names in examples are display labels only and must never form stable identifiers or MQTT uniqueness keys. Preserve a valid reading as `Unassigned` when its subject is unknown, a prompt expires or is dismissed, or assignment would require guessing. This is a supported preservation state, not necessarily an explicit choice of “nobody.” Until assignment, exclude it from person-specific charts, reports, and Home Assistant entities while retaining its daemon source, timestamps, and later authorized assignment path.
 
 ## AR-004: Measurement ownership, provenance, timestamps, correction, and retention
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Stale, Unverified
 
 ### Review result
@@ -99,13 +99,13 @@ The sources consistently separate a device-originating measurement time from dae
 
 The older two-timestamp model is incomplete for manual entry and later correction. The current contract additionally needs `taken_at` (or the best source event time), `received_at`, and `entered_at`, with time zone/offset, precision, uncertainty, provenance, source-record identity, and correction history where applicable. A missing device time is a known limitation, not permission to fabricate one. Duplicate import and clock correction policies are not defined in the sources.
 
-### Proposed disposition
+### Approved disposition
 
 Require daemons to expose the timestamp semantics and provenance they can actually support. Preserve raw/source values and identifiers alongside normalized display values. Keep corrections append-only or otherwise auditable. Define deduplication and retention per daemon, while the Hub treats projections as non-authoritative. Verify actual schemas, pruning, and correction behavior before fixing a universal data contract.
 
 ## AR-005: REST APIs, versioning, authentication, and local transport
 
-**Status:** Needs verification
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Unverified, Stale
 
 ### Review result
@@ -114,13 +114,21 @@ The documents agree that REST remains the supported mechanism for on-demand quer
 
 Claims that every daemon currently uses `aiohttp`, `/api/v1`, an unauthenticated `/health`-like capabilities endpoint, and optional shared bearer authentication are dated implementation claims. “Public/user-accessible API” means supported and documented; it must not be read as unauthenticated or exposed beyond the local trust boundary. An unauthenticated capabilities response also needs a defined non-sensitive field set.
 
-### Proposed disposition
+### Approved disposition
 
-Standardize behavior and versioning before standardizing framework or transport. Require least-privilege Hub credentials, bounded timeouts, stable error semantics, pagination where needed, and explicit capability-schema versioning. Keep daemon authentication distinct from Hub user authorization. Verify routes and current authentication in every repository before consolidation.
+Standardize behavior and versioning before standardizing framework or transport. Require least-privilege Hub credentials, bounded timeouts, stable error semantics, pagination where needed, and explicit capability-schema versioning. Keep daemon authentication distinct from Hub user authorization. “Public API” means supported and documented, not publicly exposed or unauthenticated. Integrated deployments default to loopback-only access without requiring Unix sockets over localhost HTTP. The Hub API enforces the same authorization as the browser UI; automation credentials are individually scoped and revocable. Unauthenticated health/capability responses expose only explicitly approved non-sensitive fields.
+
+Every Hub and daemon REST API must provide an OpenAPI 3.1 contract. Keep the source document checked in, serve it at a stable endpoint such as `/api/v1/openapi.json`, and validate in CI that it is syntactically valid and matches implemented routes. Document request/response/error schemas, authentication, report downloads, pagination, and capability responses without real health-data or credential examples. OpenAPI describes the static HTTP contract; `/api/v1/capabilities` remains a separate runtime/configuration description for the daemon instance. Define API, OpenAPI, and capability-schema compatibility and deprecation rules.
+
+Daemons that support full-history browsing advertise an optional readings-history capability and provide a read-only paginated endpoint such as `GET /api/v1/readings`. Its contract defines stable ordering, pagination and filters, and returns stable reading identity, subject assignment state, measurement times, provenance, quality state, and correction state as applicable. Page/per-page pagination is acceptable initially; implementations should avoid an ordering contract that prevents later cursor pagination. The Hub uses this API to present daemon history and does not duplicate the daemon's authoritative database.
+
+Daemons that own manual observations advertise an optional manual-entry capability and provide an endpoint such as `POST /api/v1/manual-entry`. This supports BBT-related observations such as cervical mucus, ovulation-predictor results, and notes without making those fields universal to every daemon. The Hub supplies the authorized form, while the daemon validates and writes the authoritative record. Entries include the subject, authenticated actor, `taken_at`, `entered_at`, observation type, typed value and unit where applicable, provenance, and a defined source classification. The source vocabulary must be extensible beyond `device` and `manual` so later imports do not require redefining existing meanings. Corrections use an auditable daemon API rather than direct Hub database access.
+
+Both optional endpoints and their schemas must appear in the daemon's OpenAPI contract when implemented and in `/api/v1/capabilities` when enabled. A daemon that does not own either workflow does not advertise or implement it.
 
 ## AR-006: MQTT coordination, state, topics, and publisher authority
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Duplicate, Unverified
 
 ### Review result
@@ -129,13 +137,13 @@ Foundation section 25, Preliminary sections 10/27/28, and the supplied Claude Co
 
 The sources do not approve MQTT command topics. Their topic names, personal-name segments, JSON shapes, QoS, retained flags, event identity, replay behavior, ordering, duplicate handling, session payloads, and deletion/correction events remain examples or omissions. Retained current state is useful for consumers but cannot replace daemon SQLite history or prove that an event was ingested.
 
-### Proposed disposition
+### Approved disposition
 
 Preserve the REST/event split. Define a machine-stable topic namespace using opaque profile/source IDs and human-readable labels only in payloads. Require event IDs or source-record IDs, schema versions, event time plus publication time, idempotent Hub ingestion, explicit QoS/retain rules, and broker-enforced ACL tests. Reserve command/control unless separately approved. Treat retained messages as current-state projections, never authoritative history.
 
 ## AR-007: Home Assistant discovery and independence
 
-**Status:** Needs verification
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Duplicate, Unverified
 
 ### Review result
@@ -144,13 +152,13 @@ The HA addendum largely duplicates Foundation sections 30–39. Both correctly m
 
 Current official Home Assistant documentation confirms component discovery, stable `unique_id`, device-registry grouping, availability topics, configuration updates, and removal through empty discovery payloads. It accepts retained discovery but prefers republishing after the Home Assistant birth message. Its MQTT Sensor documentation warns against retaining sensor state when using `expire_after`, because a stale replay can make an expired sensor appear available again. Per-sample O2Ring entities remain explicitly rejected; useful summaries are acceptable.
 
-### Proposed disposition
+### Approved disposition
 
 Keep a generic normalized MQTT contract independent of Home Assistant and implement discovery as an adapter. Use stable opaque unique IDs and device identifiers, publish only capability-supported entities, reconcile after Home Assistant birth and configuration changes, and clear obsolete retained discovery. Keep state retention, expiry, availability, and freshness separate. Reverify the official contract when the adapter is implemented or upgraded.
 
 ## AR-008: Browser UI, dashboards, displays, sessions, and input
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Conflict, Stale
 
 ### Review result
@@ -159,13 +167,20 @@ Preliminary calls the Web UI primary, while Foundation contains numerous five-in
 
 Preliminary also says the station has a physical screen for confirmation codes. That is a stronger deployment requirement than merely supporting an optional display and could prevent headless or browser-only deployments. Explicit session initiation is consistent; presence or biometric identity detection is rejected. USB keys are optional examples.
 
-### Proposed disposition
+### Approved disposition
 
-Keep all browser presentation in the Hub and require responsive, keyboard-, mouse-, touch-, and assistive-technology-friendly interaction. Treat exact display size, rotation hardware, and USB keys as deployment options. Decide separately whether a local screen is mandatory for the approved session-confirmation threat model or whether another local trusted channel can satisfy it.
+Keep all browser presentation in the Hub and require responsive, keyboard-, mouse-, touch-, and assistive-technology-friendly interaction. Treat exact display size, rotation hardware, night mode, and USB keys as deployment options. Daemons remain independently usable without the Hub browser interface. Never use biometrics or automatic presence detection to infer who is taking a reading.
+
+Support two explicit person-confirmation workflows:
+
+1. **Station-assisted confirmation:** A separate Hub station display presents a short-lived code, and the signed-in person enters it on their phone, tablet, or computer. The code must not be displayed and entered on the same device.
+2. **Personal-device confirmation:** Without a station display, the signed-in person explicitly selects and confirms the session or reading from their phone, tablet, or computer.
+
+A permanently attached station display is optional for Health Hub overall but required when station-assisted confirmation is enabled. Personal-device confirmation establishes authenticated user intent but does not independently prove physical proximity.
 
 ## AR-009: Charts, summaries, notifications, goals, and diagnostic restraint
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Unverified
 
 ### Review result
@@ -174,13 +189,13 @@ The sources consistently limit the Hub to descriptive current/recent views, tren
 
 Preliminary assigns the Hub a substantial alert engine while daemons already provide Apprise-based device notifications. Ownership, deduplication across daemon and Hub alerts, threshold provenance, escalation, acknowledgment, and missing-data behavior are not defined. User goals and optional thresholds can easily appear clinical if language and defaults are careless.
 
-### Proposed disposition
+### Approved disposition
 
-Keep graphs descriptive, show units, time basis, missing/stale data, and provenance, and do not imply causation or diagnosis. Separate operational alerts from user-configured health-data notifications. Do not ship clinical thresholds as medical advice. Treat goals as explicit personal annotations. Verify daemon notification behavior before defining Hub deduplication.
+Keep graphs and summaries descriptive and non-diagnostic. Show units, time basis, missing periods, stale data, uncertainty, and provenance where relevant; never treat missing data as a healthy or normal result. Keep device-specific sessions distinct from point measurements. Separate operational alerts from user-configured health-data notifications. Do not present default thresholds as medical advice, and treat goals as explicit personal annotations rather than diagnoses or clinical targets. Define daemon/Hub ownership and deduplication so one condition does not produce conflicting duplicate alerts. Retain alert history, acknowledgment, permissions, and delivery-failure state independently from Apprise or another delivery provider.
 
 ## AR-010: Daemon-owned PDFs and Hub coordination
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Duplicate
 
 ### Review result
@@ -189,13 +204,13 @@ Foundation, Preliminary, and the approved report contract agree that daemons arb
 
 Preliminary permits Hub-created cross-device summaries. These must be clearly different artifacts and must not be presented as daemon clinical reports. The approved branding direction excludes decorative iconography from doctor-facing PDFs.
 
-### Proposed disposition
+### Approved disposition
 
-Retain daemon report authority and define media type, filename, content disposition, authorization, streaming/error behavior, and integrity metadata at the API boundary. Identify the generating daemon and report parameters in Hub presentation. If cross-device summaries are later approved, give them a separate artifact type, provenance, and non-diagnostic label.
+Each daemon exclusively generates its device-specific doctor-facing PDFs and must do so through its API without requiring the Hub. The Hub requests, authorizes, displays, and downloads the daemon's exact PDF bytes; it does not reconstruct, restyle, merge, annotate, or silently replace them. Define media type, filename, content disposition, authorization, durable job status, errors, integrity metadata, and bounded streaming/download behavior at the report API boundary. Identify the generating daemon and selected parameters in Hub presentation. Doctor-facing PDFs contain no decorative branding iconography. Any future Hub-created cross-device summary is a separate, clearly labeled, non-diagnostic artifact with its own provenance and is never presented as a daemon report.
 
 ## AR-011: Roles, permissions, delegation, recovery, and audit
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Conflict, Unverified, Outside scope
 
 ### Review result
@@ -204,13 +219,15 @@ Preliminary alone specifies exactly one Security/Health Administrator, separate 
 
 The audit principles are sound: record actor, action, time, result, security-sensitive changes, and protect audit history from ordinary administrators. The documents do not settle emergency access, minors/dependents, incapacity, account deletion, delegation expiry, recovery without health-data disclosure, or audit retention.
 
-### Proposed disposition
+### Approved disposition
 
-Define permissions as capabilities and keep actor, subject, technical administration, health-data delegation, and recovery authority orthogonal. Treat the named roles as one policy proposal pending owner review and threat modeling. Require explicit, revocable, persisted delegation and tamper-evident or append-only audit behavior. Decide household recovery and dependent-person cases before fixing role counts.
+Define permissions as capabilities and keep actor, subject, technical administration, health-data delegation, and recovery authority orthogonal. Every person owns access to their health data by default and grants explicit, revocable, persisted delegation. Maintain one active primary Security/Health Administrator (SHA), plus Hub Administrator, User Administrator, and System Recovery Administrator roles with their documented scopes. Administrative roles are composable and non-exclusive: the SHA may assign one account to multiple roles, the SHA may also hold other roles, and every assignment is independently revocable and audited. Effective technical permissions are the union of assigned roles. Except for the explicitly documented SHA access to all Samba report shares, no technical role automatically grants another person's health-data access. The SHA has read-only Samba access to shares belonging to other users and normal owner permissions on the SHA's own share. The SHA is also the host operating-system administrator and can ultimately access host-stored data outside application controls; the product must not imply otherwise. On initial login, each user receives a one-time notification-center notice describing this access. Persist the acknowledged notice version and notify again after a material policy change. Warn when combined roles reduce separation of duties without prohibiting the combination in a household system. Disabling or revoking one administrative role does not remove other roles, normal-user access, or health data. SHA transfer is a separate audited security/recovery operation.
+
+Require append-only or tamper-evident audit behavior recording actor, action, target, time, result, and relevant reason. Ordinary administrators cannot edit or delete audit history. Recovery authority must not silently grant routine health-data access. Define emergency access, minors/dependents, incapacity, delegation expiry, account deletion, recovery succession, and audit retention before implementation.
 
 ## AR-012: Backup, restore, unrecoverable data, Samba, and filesystems
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Conflict, Unverified, Outside scope
 
 ### Review result
@@ -219,13 +236,15 @@ This material appears mainly in Preliminary. Local backup as a default and clear
 
 A consistent backup cannot be assumed from independent live SQLite files. The sources do not fully define database snapshots, encryption keys, credentials, report files, audit logs, integrity verification, restore ordering, schema compatibility, or partial-daemon failure. “Unrecoverable” must distinguish data never captured from data lost after capture.
 
-### Proposed disposition
+### Approved disposition
 
-Make backup capability mandatory but individual transports such as Samba and rclone optional adapters. Define a manifest-based component backup contract using safe SQLite backup/snapshot procedures, encrypted secrets handling, integrity checks, version metadata, and tested restore. Preserve daemon authority after restoration. Do not expose raw health-data directories merely for convenience.
+Make backup capability mandatory. Define a manifest-based component backup contract using safe SQLite online-backup or other WAL-aware snapshot procedures, encrypted secrets handling, integrity checks, schema/version metadata, documented restore order, partial-failure handling, and tested restore. Include required configuration, report metadata, audit data, and protected key-recovery material without exposing credentials or encryption keys through ordinary shares. Preserve daemon authority after restoration. Distinguish data never captured, not yet synchronized, intentionally excluded, and lost after capture. Clearly state that a local backup alone does not protect against disk failure, theft, or fire. Rclone, removable storage, and other backup transports remain optional.
+
+Samba is a required user report-access channel in an integrated Health Hub installation, separate from backup. Users can access their authorized PDFs through both the Hub Web UI and per-user Samba shares. Shares expose only authorized report/export areas containing the daemon's exact PDF bytes and required source/provenance metadata; they never expose SQLite/WAL files, raw daemon directories, configuration, credentials, keys, audit logs, or internal job storage. Apply health-data delegation consistently across Web UI and Samba. The SHA has read-only access to every other user's Samba share and owner access to the SHA's own share. Other technical roles require explicit user delegation. Manage authentication, ownership, revocation, and best-available access logging through the Hub while acknowledging that the SHA, as host OS administrator, can access host-stored data outside Samba controls.
 
 ## AR-013: Installation, services, host OS, Python environments, and updates
 
-**Status:** Needs verification
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Stale, Unverified, Outside scope
 
 ### Review result
@@ -234,13 +253,15 @@ Independent systemd services and daemon independence are compatible with the sin
 
 The persistence standard now selected for project databases is SQLite with SQLAlchemy 2.0 style and Alembic migrations. That choice applies to each component database, without creating a shared cross-daemon database or moving daemon-owned measurements into the Hub.
 
-### Proposed disposition
+### Approved disposition
 
-Specify lifecycle outcomes—isolated service identity, least-privilege files, deterministic configuration, migrations, backup compatibility, health checks, rollback/recovery, and independent daemon operation—separately from a particular distribution or Python installer. Verify current units and packaging before writing deployment requirements.
+Run the Hub and every daemon as independent, least-privilege native systemd services. Each component owns its own SQLite database, uses SQLAlchemy 2.0 style, and maintains its own Alembic migration history. A component never opens or migrates another component's database. Upgrades require compatibility checks, a safe pre-migration backup, controlled migrations, post-upgrade health checks, and documented recovery. The Hub may report update availability but does not perform host or component updates. Service and update management remain under SHA/host-administrator control, and users or administrators do not manually alter managed Python environments.
+
+Treat exact supported Ubuntu versions, filesystem paths, service names, Python environment tooling, and package commands as documented implementation and packaging choices rather than permanent architecture. Removing Docker images, packages, tags, and badges from the Hub or daemon repositories means those applications are not distributed as containers; it does not remove Docker Engine from the host or prohibit containers as an infrastructure boundary. Approved supporting services, including the MQTT broker and Mailpit, may require and run through Docker while the Hub and daemons remain native systemd services. Verify current units and packaging before presenting implementation details as guaranteed behavior.
 
 ## AR-014: Device capabilities, replacement, and manufacturer-neutral expansion
 
-**Status:** Needs verification
+**Status:** Approved 2026-08-20
 **Classifications:** Consistent, Stale, Unverified
 
 ### Review result
@@ -249,13 +270,13 @@ All sources support capability-driven integration and warn against erasing devic
 
 Claims about exact daemon capabilities and hardware limitations were reported from an earlier code review but remain dated for this review.
 
-### Proposed disposition
+### Approved disposition
 
-Make capability discovery schema-versioned and additive. Separate logical source, physical device, daemon instance, and measurement capability. Preserve history through replacement while retaining physical provenance. Require unknown-capability tolerance and manufacturer-neutral UI language. Verify each daemon and underlying protocol before marking a behavior guaranteed.
+Make capability discovery schema-versioned and additive. Keep logical health-data source, physical device, daemon instance, and measurement capability as separate identities. Replacing a physical device preserves existing history and its original device provenance rather than rewriting it as though the replacement produced the readings. Require the Hub and other consumers to tolerate unknown capabilities and use manufacturer-neutral UI language. Device-specific behavior—including profile models, available clocks, session semantics, measurements, assignment support, and manual-entry support—must be advertised rather than assumed. Mark hardware or protocol behavior as guaranteed only after verification for the applicable daemon and device combination.
 
 ## AR-015: Release scope, deferred work, and implementation constraints
 
-**Status:** Awaiting owner decision
+**Status:** Approved 2026-08-20
 **Classifications:** Conflict, Stale, Unverified
 
 ### Review result
@@ -264,9 +285,9 @@ Foundation's 20-item “initial release” list includes normalized MQTT output,
 
 The documents mix four kinds of statement: enduring architecture, product requirement, illustrative design, and observed implementation. This is the main cause of apparent conflict and scope growth.
 
-### Proposed disposition
+### Approved disposition
 
-The consolidated work should label each retained item as invariant, required capability, optional adapter, implementation choice, or deferred investigation. Establish a new release plan only after owner decisions and current code verification. Do not inherit the dated initial-release list wholesale.
+Classify every retained requirement as an architecture invariant, required product capability, optional adapter, implementation choice, or deferred investigation. Establish a new release plan from the approved owner decisions and verified current behavior. Do not inherit the dated initial-release list wholesale because it mixes architecture, UI proposals, implementation details, and optional integrations.
 
 ## Implementation claim register
 
