@@ -73,10 +73,10 @@ Review one category at a time. Record evidence and proposed dispositions before 
 
 ## Phase 5: consolidation
 
-- [ ] Draft a purpose-named consolidated architecture specification without changing the three source documents.
-- [ ] Move specialized material into focused documents only where that improves ownership and maintenance.
-- [ ] Trace every retained requirement to its source or approved review decision.
-- [ ] Compare the draft against all source sections and the completed interface/report contracts.
+- [x] Draft a purpose-named consolidated architecture specification without changing the three source documents; see [`HEALTH_HUB_SYSTEM_ARCHITECTURE.md`](HEALTH_HUB_SYSTEM_ARCHITECTURE.md).
+- [x] Keep system boundaries in the consolidated specification, reference the existing interface/report and adoption standards, and route future machine-facing detail to focused contracts only where it has an independent compatibility surface, test suite, release cadence, or maintainer.
+- [x] Trace every retained requirement group to its protected source, approved review decision, or focused standard in [`ARCHITECTURE_TRACEABILITY.md`](ARCHITECTURE_TRACEABILITY.md).
+- [x] Compare the draft against every protected source section and the completed interface/report contracts; record coverage, delegation, supersession, evidence-only material, deferrals, and corrections in [`ARCHITECTURE_CONSOLIDATION_CHECK.md`](ARCHITECTURE_CONSOLIDATION_CHECK.md).
 - [ ] Review the consolidated draft with the project owner and Claude Code.
 - [ ] Adopt a canonical specification only after explicit approval.
 - [ ] Decide separately whether the three source documents remain historical, become pointers, or are archived.
