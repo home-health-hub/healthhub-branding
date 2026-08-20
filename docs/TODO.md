@@ -34,27 +34,27 @@ Resolve these in Health Hub and daemon implementation plans. The highest-priorit
 
 ### Highest priority
 
-- [ ] Make daemon synchronization starts idempotent and handle duplicate Hub requests or an already-running job.
-- [ ] Apply shared-browser theme precedence correctly across logged-out state, login, multiple users, delayed database reads, disabled storage, and `system` theme changes.
-- [ ] Support multiple devices and manufacturers under one function-led Hub category without changing primary navigation identity.
-- [ ] Preserve absolute timestamps, time zones, daylight-saving ambiguity, and distinct `Taken at`, `Received at`, and `Entered at` values.
-- [ ] Support asynchronous, restart-safe, bounded PDF generation with stable report identifiers and verifiable response media types.
+- [x] Make daemon synchronization starts idempotent and handle duplicate Hub requests or an already-running job; use the daemon-owned job contract in `docs/ADOPTION.md`.
+- [x] Apply the database-authoritative, browser-cached theme contract in `docs/ADOPTION.md` across logged-out state, login, multiple users, delayed reads, disabled storage, and `system` changes.
+- [x] Support multiple devices, manufacturers, and daemon sources under the function-led device/source contract in `docs/ADOPTION.md` without changing primary navigation identity.
+- [x] Preserve absolute and raw local timestamps, time zones, daylight-saving ambiguity, certainty, precision, and distinct `Taken at`, `Received at`, and `Entered at` values under the time contract in `docs/ADOPTION.md`.
+- [x] Support asynchronous, restart-safe, bounded PDF generation under the daemon-owned report-job contract in `docs/ADOPTION.md`.
 
 ### Identity and navigation
 
-- [ ] Provide a text-led fallback when a daemon identification image is missing, broken, or not yet approved.
-- [ ] Let Health Hub select the person and device explicitly; do not infer a person solely from a device.
-- [ ] Keep manufacturer and model names in secondary device details when a daemon supports several devices.
+- [x] Use the text-led identification-image fallback in `docs/ADOPTION.md` when daemon artwork is missing, broken, or not yet approved.
+- [x] Use the explicit person-selection contract in `docs/ADOPTION.md`; never infer a person solely from a device.
+- [x] Keep manufacturer and model names in secondary device details under the device-label contract in `docs/ADOPTION.md`.
 
 ### Theme, input, and accessibility
 
-- [ ] Prevent incorrect-theme flashes without allowing cached browser state to overwrite the authenticated database preference.
-- [ ] Keep approved raster artwork legible in Dark mode using a controlled surface rather than inversion or recoloring.
-- [ ] Preserve core links, headings, forms, and information when images, CSS, or JavaScript fail.
-- [ ] Handle 200–400% text scaling, browser translation, forced colors, and long labels without truncation or fixed-height failures.
-- [ ] Prevent duplicate screen-reader names and excessive live announcements during synchronization.
-- [ ] Restore focus safely when a dialog trigger disappears after an update.
-- [ ] Support simultaneous mouse, touch, and keyboard input without hover-only actions, overlapping targets, or accidental activation while scrolling.
+- [x] Use the first-paint theme bootstrap in `docs/ADOPTION.md` without allowing cached browser state to overwrite the authenticated database preference.
+- [x] Keep approved raster artwork legible under the controlled artwork-surface contract in `docs/ADOPTION.md`, without inversion or recoloring.
+- [x] Preserve core links, headings, forms, and information under the graceful-degradation contract in `docs/ADOPTION.md` when images, CSS, or JavaScript fail.
+- [x] Handle 200–400% text scaling, browser translation, forced colors, and long labels under the resilient-layout contract in `docs/ADOPTION.md`.
+- [x] Prevent duplicate screen-reader names and excessive synchronization announcements under the assistive-technology announcement contract in `docs/ADOPTION.md`.
+- [x] Restore focus under the dialog-focus contract in `docs/ADOPTION.md` when a trigger disappears after an update.
+- [x] Support simultaneous mouse, touch, and keyboard input under the mixed-input contract in `docs/ADOPTION.md`.
 
 ### Daemon state and availability
 
