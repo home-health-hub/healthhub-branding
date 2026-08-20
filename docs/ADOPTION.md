@@ -216,6 +216,72 @@ The database preference and browser cache may contain `light`, `dark`, `system`,
 - Historical PDFs remain immutable. Corrections or exclusions produce a new report that may explicitly supersede an earlier report.
 - Report creation, status retrieval, metadata retrieval, and content download remain usable through the daemon API without Health Hub.
 
+### Independent daemon availability contract
+
+- Track availability independently for each daemon and function. One unavailable daemon never disables unrelated Hub pages, navigation, data, or actions.
+- Keep the affected function page available and show its operational state locally.
+- Continue presenting durable cached readings when available and label them with the exact last successful refresh time and applicable time zone.
+- Distinguish daemon unavailability from no readings, device disconnection, and failure between the browser and Health Hub.
+- Disable only actions that require the unavailable daemon, such as starting synchronization or generating a new report.
+- Keep previously obtained daemon-produced PDFs viewable while their established retention and authorization rules allow it.
+- Never describe cached readings as live, current, or newly synchronized.
+- Retry daemon availability checks with bounded exponential backoff and jitter, and provide a clear manual retry action without creating duplicate daemon jobs.
+- Preserve unsaved manual-entry data if daemon availability changes while a form is open. Explain any submission limitation without clearing the form.
+
+### Synchronization timeout contract
+
+- The daemon owns authoritative job state. Health Hub never declares daemon work failed solely because a browser or Hub request timed out.
+- Each synchronization job exposes `created_at`, `started_at`, a current `updated_at` or heartbeat, and an operation-specific execution deadline or timeout policy.
+- When Health Hub cannot reach the daemon beyond its short availability threshold, stop presenting an unqualified active `Syncing` state and show `Unknown` while the outcome cannot be verified.
+- When the reachable daemon reports `failed`, `interrupted`, or expiration under its own deadline, present that authoritative terminal state as `Error` or `Interrupted` with the safe error reference.
+- After restart, the daemon reconciles persisted `running` jobs by resuming safely or marking them `interrupted`.
+- Use operation-specific limits rather than one global timeout; a device-history transfer may legitimately take longer than an availability check.
+- When state becomes `Unknown`, show the last confirmed progress and the exact time it was confirmed, including the applicable time zone.
+- Poll with bounded backoff and reduce or suspend high-frequency polling while the page is hidden or after the job becomes terminal.
+- A manual retry first retrieves the existing job state and never blindly submits a second job.
+- Never leave an indefinite `Syncing` presentation without a current daemon heartbeat or a visible explanation that confirmation is pending.
+
+### Synchronization recovery contract
+
+- The daemon continues and owns a synchronization job independently of Health Hub and the browser that requested it.
+- Health Hub stores the daemon ID, stable `job_id`, operation, device, applicable person assignment, submission time, and idempotency key in its database rather than relying on browser storage.
+- On page load, authenticated-session restoration, or return to the function page, Health Hub finds its active job record and retrieves current state from the daemon.
+- Browser storage may hold a non-sensitive navigation hint but never acts as the authoritative job record.
+- Before submitting synchronization, Health Hub checks for an active equivalent job. For a request whose submission outcome is uncertain, reuse the original idempotency key rather than generating a new one.
+- If the daemon returns `already_running`, attach Hub presentation to that existing job.
+- Authorize access to job state for the current account and person context. Never inherit another user's job presentation from shared browser state.
+- If a referenced job has aged out of daemon retention, show `Unknown` with the last confirmed information and allow an explicitly new synchronization request.
+- Multiple browser tabs attach to the same persisted job and do not start competing jobs.
+
+### Standalone daemon contract
+
+- Health Hub is an optional API client and never a runtime dependency of a daemon.
+- Without Health Hub, a daemon can start, discover or configure supported devices, synchronize, store and retrieve durable data, report operational status, and generate and retrieve authoritative PDFs.
+- Expose standalone capabilities through documented, versioned APIs suitable for another client or administrative tool.
+- Daemon authentication and authorization do not require an active Hub session. A deployment may configure independent service credentials and network policy.
+- Keep measurements, job state, report metadata, and retention state in daemon-owned durable storage.
+- Do not require Hub assets, JavaScript, routes, templates, theme state, or browser presentation code.
+- Headless API responses include stable identifiers, timestamps, state, safe error references, and machine-readable errors.
+- Treat Health Hub person and device mappings as explicit API inputs or durable mappings. Loss of Hub connectivity must not corrupt daemon-owned identity or provenance.
+- Standalone operation never implies anonymous access; the daemon enforces its configured authentication and network boundaries.
+- Integration tests exercise synchronization, durable-data retrieval, operational status, and PDF generation while Health Hub is absent.
+
+### Scoped operational-status contract
+
+- Do not collapse independent operational facts into one status or apply a universal priority order.
+- Choose the primary status according to the current task and the condition that most directly blocks or changes it. Present other relevant facts as explicitly labeled secondary status text or badges.
+- `Error` describes a failed operation and does not imply general daemon unavailability.
+- `Offline` describes lost daemon availability and does not replace the known outcome of the last job.
+- `Syncing` describes a daemon-confirmed active synchronization job.
+- `Attention` describes a non-failure condition requiring review and states what needs attention.
+- For an active synchronization with an older reading requiring review, use primary `Syncing` and secondary `Attention`.
+- For a failed synchronization while the daemon remains reachable, use primary `Error` and secondary `Online`.
+- For an unreachable daemon after a failed job, use primary `Offline` and secondary `Last sync failed`.
+- Never present `Syncing` as current when daemon state is unconfirmed. Use `Unknown` and retain the last confirmed job fact.
+- Color and icons remain supplementary; visible text communicates every status.
+- Status details identify their scope, timestamp, safe explanation, and available next action.
+- Screen-reader announcements report meaningful primary transitions only, while secondary facts remain programmatically available on demand.
+
 The Hub may copy approved organization, Hub, application, and navigation artwork required by its pages. It does not copy README banners into the application.
 
 ## Daemon adoption
