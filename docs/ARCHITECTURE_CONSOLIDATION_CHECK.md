@@ -113,6 +113,7 @@ One omission was corrected during this check: operational logging is now disting
 - Added the owner-approved notification-center boundary: capability scoping, data-minimized previews, occurrence-preserving deduplication, distinct acknowledgment/resolution, and persistent required notices.
 - Added the owner-approved attention-first administration overview with capability-scoped operational summaries, no health-content previews, precise state semantics, and accessible refresh behavior.
 - Added the owner-approved individual role-management workflow with capability/effective-permission previews, separation-of-duty warnings, reauthentication, immediate revocation, and sole-SHA protection.
+- Added the clarified optional-TOTP account-security contract: confirmed enrollment with QR and selectable text, one-time backup codes, protected storage, rate-limited and replay-resistant verification, audited SHA last-resort reset without health-data access, and session revocation after reset.
 - Added the owner-approved secret-management boundary: show-once issuance, non-secret metadata thereafter, reauthenticated audited handling, replacement-first rotation, redacted tests, and guided offline recovery storage.
 - No contradiction was found between the daemon-owned PDF rule and the focused report contracts.
 - No contradiction was found between database-authoritative signed-in theme preferences and the architecture, because detailed theme state is delegated rather than restated.
