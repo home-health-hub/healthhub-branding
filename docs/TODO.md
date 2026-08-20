@@ -27,6 +27,7 @@
 ## Later decisions
 
 - Review the provisional doctor-facing PDF specification with the project owner and Claude Code before implementation.
+- Conduct the read-only cross-document architecture review and eventual consolidation tracked in [`ARCHITECTURE_REVIEW_TODO.md`](ARCHITECTURE_REVIEW_TODO.md).
 
 ## Implementation edge cases
 
@@ -39,6 +40,10 @@ Resolve these in Health Hub and daemon implementation plans. The highest-priorit
 - [x] Support multiple devices, manufacturers, and daemon sources under the function-led device/source contract in `docs/ADOPTION.md` without changing primary navigation identity.
 - [x] Preserve absolute and raw local timestamps, time zones, daylight-saving ambiguity, certainty, precision, and distinct `Taken at`, `Received at`, and `Entered at` values under the time contract in `docs/ADOPTION.md`.
 - [x] Support asynchronous, restart-safe, bounded PDF generation under the daemon-owned report-job contract in `docs/ADOPTION.md`.
+
+### Persistence implementation
+
+- [x] Standardize every persistent Health Hub and daemon database on SQLite, SQLAlchemy using 2.0-style APIs, and an independent Alembic-managed schema history under the persistence contract in `docs/ADOPTION.md`.
 
 ### Identity and navigation
 
