@@ -66,10 +66,10 @@ Review one category at a time. Record evidence and proposed dispositions before 
 
 ## Phase 4: decisions
 
-- [ ] Present consequential conflicts to the project owner individually.
-- [ ] Record the approved resolution, rationale, affected sources, and destination document.
-- [ ] Keep rejected alternatives and unresolved questions visible in the review record.
-- [ ] Avoid changing implementation merely to make a draft document appear internally consistent.
+- [x] Present consequential conflicts to the project owner individually.
+- [x] Record the approved resolution, rationale, affected sources, and destination document.
+- [x] Keep rejected alternatives and unresolved questions visible in the review record.
+- [x] Avoid changing implementation merely to make a draft document appear internally consistent.
 
 ## Phase 5: consolidation
 
