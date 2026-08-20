@@ -279,11 +279,11 @@ These claims are not accepted as current merely because Preliminary section 28 l
 | CR-003 | All daemon HTTP servers use `aiohttp.web` and optional shared bearer tokens. | Confirmed current implementation; framework-specific and not an architecture requirement. |
 | CR-004 | Every daemon uses SQLite for authoritative durable measurement storage. | Confirmed; all five use direct `sqlite3`, with no current SQLAlchemy or Alembic implementation. |
 | CR-005 | TrueMetrix and Etekcity support assignment models differing from O2Ring's configured-wearer model. | Confirmed in current schemas, configuration, and endpoints; identity must remain capability-driven. |
-| CR-006 | The BP protocol has no device-side clock and its memory slot is not a Hub profile. | Hardware/protocol evidence required. |
+| CR-006 | The BP protocol has no device-side clock and its memory slot is not a Hub profile. | Confirmed for the implemented reverse-engineered packet protocol; other models remain unverified. |
 | CR-007 | O2Ring live readings and downloaded sessions use distinct tables and semantics. | Confirmed in daemon storage and API source; driver/session-finalization behavior remains for hardware review. |
 | CR-008 | Daemons provide notifications and scheduled staleness/range checks. | Scheduled alert code/configuration and units confirmed; live provider behavior not tested. |
 | CR-009 | Each daemon generates its own device-specific PDFs. | Confirmed; current on-demand API generation is synchronous rather than a durable asynchronous job. |
-| CR-010 | Daemon retention/pruning exists and is covered by `test_prune.py`. | Test-name observation only; policy and runtime behavior remain unverified. |
+| CR-010 | Daemon retention/pruning exists and is covered by `test_prune.py`. | Deferred to a separate storage-policy review; not established by the hardware/protocol pass. |
 | CR-011 | Current service units, users, paths, dependencies, and update procedures match the preliminary deployment model. | Unit files, daemon-specific users, paths, and dependencies inspected; installed runtime and update behavior not tested. |
 | CR-012 | Current Home Assistant discovery requirements match the proposed topics, retained state, IDs, units, and availability model. | Current official Home Assistant documentation required. |
 
