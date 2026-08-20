@@ -27,3 +27,64 @@
 ## Later decisions
 
 - Review the provisional doctor-facing PDF specification with the project owner and Claude Code before implementation.
+
+## Implementation edge cases
+
+Resolve these in Health Hub and daemon implementation plans. The highest-priority items are marked first.
+
+### Highest priority
+
+- [ ] Make daemon synchronization starts idempotent and handle duplicate Hub requests or an already-running job.
+- [ ] Apply shared-browser theme precedence correctly across logged-out state, login, multiple users, delayed database reads, disabled storage, and `system` theme changes.
+- [ ] Support multiple devices and manufacturers under one function-led Hub category without changing primary navigation identity.
+- [ ] Preserve absolute timestamps, time zones, daylight-saving ambiguity, and distinct `Taken at`, `Received at`, and `Entered at` values.
+- [ ] Support asynchronous, restart-safe, bounded PDF generation with stable report identifiers and verifiable response media types.
+
+### Identity and navigation
+
+- [ ] Provide a text-led fallback when a daemon identification image is missing, broken, or not yet approved.
+- [ ] Let Health Hub select the person and device explicitly; do not infer a person solely from a device.
+- [ ] Keep manufacturer and model names in secondary device details when a daemon supports several devices.
+
+### Theme, input, and accessibility
+
+- [ ] Prevent incorrect-theme flashes without allowing cached browser state to overwrite the authenticated database preference.
+- [ ] Keep approved raster artwork legible in Dark mode using a controlled surface rather than inversion or recoloring.
+- [ ] Preserve core links, headings, forms, and information when images, CSS, or JavaScript fail.
+- [ ] Handle 200–400% text scaling, browser translation, forced colors, and long labels without truncation or fixed-height failures.
+- [ ] Prevent duplicate screen-reader names and excessive live announcements during synchronization.
+- [ ] Restore focus safely when a dialog trigger disappears after an update.
+- [ ] Support simultaneous mouse, touch, and keyboard input without hover-only actions, overlapping targets, or accidental activation while scrolling.
+
+### Daemon state and availability
+
+- [ ] Keep unrelated Hub functions usable when one daemon is offline and label cached data with its last successful update.
+- [ ] Define timeouts that move abandoned Syncing states to Unknown or Error.
+- [ ] Resume or retrieve daemon-owned synchronization state after the browser closes instead of starting a duplicate job.
+- [ ] Keep standalone daemon synchronization, durable data access, operational status, and PDF APIs functional without Health Hub.
+- [ ] Define how primary and secondary facts appear when Error, Syncing, Offline, or Attention conditions overlap.
+
+### Charts and measurement data
+
+- [ ] Preserve original values and units when displaying conversions.
+- [ ] Retain duplicate timestamps and out-of-order readings without silently merging or misordering provenance.
+- [ ] Do not substitute `Entered at` for a missing `Taken at` without an explicit label.
+- [ ] Keep historical PDFs immutable or explicitly superseded after a reading is corrected or excluded.
+- [ ] Aggregate dense charts only for display and retain access to underlying readings.
+- [ ] Use contrast-safe accent derivatives, marker shapes, line styles, and labels in both themes and grayscale.
+
+### PDFs and APIs
+
+- [ ] Echo the resolved person, date range, filters, and time zone in report response metadata.
+- [ ] Verify HTTP status and media type before presenting an API response as a PDF.
+- [ ] Preserve report metadata when a generated PDF expires and explain whether regeneration may include later corrections.
+- [ ] Embed the approved font or record the stable fallback used by the PDF generator.
+- [ ] Stream or use bounded temporary storage for large reports.
+- [ ] Ensure Health Hub never adds pages, headers, watermarks, or other modifications to a daemon-produced PDF.
+
+### Branding distribution
+
+- [ ] Reject lock files that reference an unreleased version, missing commit, wrong asset role, or mismatched destination checksum.
+- [ ] Treat removed or semantically changed token names as a breaking branding release.
+- [ ] Require a coherent branding release when tokens and images are updated partially.
+- [ ] Verify copied consumer assets and tokens against `branding.lock.json` in consumer CI.
