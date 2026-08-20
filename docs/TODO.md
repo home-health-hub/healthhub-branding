@@ -75,12 +75,12 @@ Resolve these in Health Hub and daemon implementation plans. The highest-priorit
 
 ### PDFs and APIs
 
-- [ ] Echo the resolved person, date range, filters, and time zone in report response metadata.
-- [ ] Verify HTTP status and media type before presenting an API response as a PDF.
-- [ ] Preserve report metadata when a generated PDF expires and explain whether regeneration may include later corrections.
-- [ ] Embed the approved font or record the stable fallback used by the PDF generator.
-- [ ] Stream or use bounded temporary storage for large reports.
-- [ ] Ensure Health Hub never adds pages, headers, watermarks, or other modifications to a daemon-produced PDF.
+- [x] Return the daemon-resolved person, range, filters, time zone, and data-selection facts under the report-metadata contract in `docs/ADOPTION.md`.
+- [x] Verify job state, HTTP response, media type, identity, bounds, and integrity under the PDF-response contract in `docs/ADOPTION.md` before presentation.
+- [x] Preserve report metadata and explain regeneration differences under the expired-report contract in `docs/ADOPTION.md`.
+- [x] Embed the pinned approved font or an explicitly supported pinned fallback under the PDF-font contract in `docs/ADOPTION.md`.
+- [x] Stream and use bounded private temporary storage under the report-resource contract in `docs/ADOPTION.md`.
+- [x] Preserve daemon-produced PDF bytes exactly under the authoritative-PDF transport contract in `docs/ADOPTION.md`.
 
 ### Branding distribution
 

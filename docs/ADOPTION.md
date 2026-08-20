@@ -364,6 +364,92 @@ The database preference and browser cache may contain `light`, `dark`, `system`,
 - Every chart has a text summary and accessible reading table independent of its visual encoding.
 - Test Light, Dark, grayscale, forced colors, common color-vision deficiencies, keyboard focus, touch selection, and printed or PDF output.
 
+### Resolved report-metadata contract
+
+- Report-job and completed-report metadata return daemon-resolved values rather than only echoing the client's original request.
+- Include stable person ID and a safe display label without unnecessary personal information.
+- Include exact range boundaries, each boundary's inclusive or exclusive meaning, and the time zone used to resolve calendar dates.
+- Identify whether selection uses measurement time, receipt time, or entry time.
+- Include selected devices or sources, reading types, filters, exclusions, display-unit choices, and unknown-time handling.
+- Distinguish explicitly requested values from daemon-applied defaults.
+- Record the normalized request hash or canonical request representation used for idempotency.
+- Return included-reading count, excluded counts by reason, and the applicable correction or snapshot cutoff.
+- Store the same resolved metadata with the immutable `report_id` so later retrieval does not depend on current settings.
+- Health Hub presents its review summary from daemon-returned metadata and does not reconstruct authoritative report parameters independently.
+- Never include credentials, internal filesystem paths, sensitive query implementation details, or unsafe diagnostics in report metadata.
+
+### PDF response-verification contract
+
+- Health Hub retrieves content only after the daemon reports the expected `report_id` as `succeeded`.
+- Require an HTTP success status. Never pass a redirect, authentication page, or error response to the PDF viewer.
+- Require `Content-Type: application/pdf`; reject HTML, JSON, plain text, missing, or conflicting media types.
+- Validate the PDF file signature and never use content sniffing to override an incorrect declared media type.
+- Match returned report identity and immutable metadata to the requested report.
+- When supplied, verify `Content-Length` against configured limits and verify SHA-256 before making the report available.
+- Enforce a configured maximum download size and stream through bounded storage rather than buffering unlimited content.
+- Use the daemon-provided filename only after sanitization; reject path components and executable extensions.
+- Present verified content with `X-Content-Type-Options: nosniff` and provide an explicit download option.
+- On validation failure, show a safe report error and correlation reference rather than the response body or a broken PDF viewer.
+- Never cache an authentication or error response under a report ID.
+- Log status, declared media type, byte length, report ID, and integrity result without logging report content or sensitive headers.
+
+### Expired report-content contract
+
+- Retain immutable report metadata after PDF content expires according to a documented metadata-retention policy.
+- Metadata retains report ID, hash, byte length, generation time, resolved inputs, included data snapshot or version, report-format version, and supersession links.
+- The content endpoint returns an explicit expired response distinct from not found and not authorized.
+- Health Hub shows when content expired and preserves available non-sensitive report details.
+- Regeneration is an explicit new report request with a new idempotency key and new `report_id`.
+- Before regeneration, explain that the result may include later corrections, exclusions, late-arriving readings, changed defaults, or a newer report format.
+- A client may request the original resolved parameters, but the daemon revalidates current authorization and currently supported options.
+- New report metadata may link to the expired report as `regenerated_from`; the link never implies identical content.
+- Exact historical reproduction requires a retained versioned data snapshot and compatible report generator. Otherwise state that exact reproduction is unavailable.
+- Expiration never permits Health Hub to fabricate, rebuild, or modify a daemon report.
+- Content and metadata retention periods are daemon-owned, configurable, and exposed through the API.
+
+### PDF font contract
+
+- Use the approved Atkinson Hyperlegible Next family for doctor-facing PDFs when the generator can legally and technically embed it.
+- Package a pinned font version with the daemon and never download fonts during report generation.
+- Embed or subset every used style and weight so viewing does not depend on fonts installed on another computer.
+- Preserve the font license and required notices in the daemon distribution.
+- If required embedding fails, fail report generation visibly instead of silently producing an inconsistent document.
+- A deliberately supported fallback is pinned and metrically tested against the complete layout; record its exact family and version in report metadata.
+- Never use an uncontrolled system-font fallback chain for PDF generation.
+- Technical report metadata records font identity, embedding or subsetting status, and PDF generator version.
+- Test required characters, units, symbols, names, and supported languages before enabling a font.
+- Validate generated PDFs for missing glyphs, substituted fonts, clipped text, and searchable or extractable text.
+- A font change increments the report-format version because pagination and chart-label layout may change.
+
+### Report resource and temporary-storage contract
+
+- The daemon enforces configurable limits for report range, reading count, generated size, execution time, concurrent jobs, and temporary-disk use.
+- Reject requests exceeding known limits before generation where possible and never silently truncate a report.
+- Read measurements incrementally or in bounded pages instead of loading an unlimited result set into memory.
+- Write output to a uniquely named private temporary file on the same filesystem as final report storage.
+- Use restrictive permissions and never expose temporary paths through APIs or logs.
+- Track bytes written and abort safely before exceeding the configured output limit.
+- Check available disk space before and during generation while reserving headroom for other daemon operations.
+- Publish only a closed and validated PDF through atomic rename.
+- After cancellation, timeout, crash, or validation failure, recovery removes incomplete temporary output without deleting completed reports.
+- Stream completed downloads with backpressure and bounded buffers.
+- Limit generation concurrency separately from download concurrency to prevent resource starvation.
+- Test oversized ranges, disk exhaustion, process interruption, slow clients, concurrent jobs, and cleanup after restart.
+
+### Authoritative PDF transport contract
+
+- The daemon is the sole generator and authority for PDF bytes and report content.
+- Health Hub may request, verify, cache within policy, display, and download the exact daemon-produced bytes.
+- Health Hub never adds, removes, reorders, rasterizes, annotates, signs, compresses, watermarks, or otherwise rewrites PDF content.
+- Hub page headers, navigation, branding, print controls, and status messages remain outside the embedded PDF document.
+- A Hub print action opens or prints the verified daemon PDF and never generates an HTML-to-PDF substitute.
+- Preserve the daemon-provided SHA-256 through Hub retrieval, caching, viewing, and download.
+- If transport or storage changes the bytes, integrity verification fails and the report is not presented as authoritative.
+- A sanitized download filename may differ without changing file content or `report_id`.
+- Any future annotation workflow stores annotations separately and never represents an annotated derivative as the daemon's authoritative report.
+- Doctor-facing PDFs remain free of Hub and daemon iconography and decorative branding.
+- Integration tests compare the daemon hash with Hub-served and downloaded content byte for byte.
+
 The Hub may copy approved organization, Hub, application, and navigation artwork required by its pages. It does not copy README banners into the application.
 
 ## Daemon adoption
