@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Health Hub
+Comment=Open the Home Health Hub
+Icon=org.homehealthhub.healthhub
+Exec=xdg-open https://<health-hub-address>/
+Terminal=false
+Categories=Utility;MedicalSoftware;
