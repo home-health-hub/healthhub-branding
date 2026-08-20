@@ -7,7 +7,7 @@ temporary="$(mktemp)"
 trap 'rm -f "$temporary"' EXIT
 
 cd "$project_dir"
-find organization healthhub daemons \
+find organization healthhub daemons tokens \
   -type f \
   ! -path '*/archive/*' \
   -print0 \

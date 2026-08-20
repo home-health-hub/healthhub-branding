@@ -7,7 +7,7 @@ after="$(mktemp)"
 trap 'rm -f "$before" "$after"' EXIT
 
 cd "$project_dir"
-find organization healthhub daemons \
+find organization healthhub daemons tokens \
   -type f \
   ! -path '*/archive/*' \
   -print0 \
@@ -15,8 +15,9 @@ find organization healthhub daemons \
   | xargs -0 sha256sum > "$before"
 
 ./scripts/build-exports.sh
+./scripts/build-design-tokens.py
 
-find organization healthhub daemons \
+find organization healthhub daemons tokens \
   -type f \
   ! -path '*/archive/*' \
   -print0 \

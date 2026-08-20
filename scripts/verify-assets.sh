@@ -54,6 +54,13 @@ for product_dir in "$project_dir"/daemons/*; do
   done
 done
 
+require_file "$project_dir/tokens/brand.tokens.json"
+require_file "$project_dir/tokens/brand.css"
+require_file "$project_dir/specimens/interface.html"
+require_file "$project_dir/specimens/specimen.css"
+require_file "$project_dir/specimens/specimen.js"
+python3 "$project_dir/scripts/verify-design-tokens.py"
+
 if (( failures > 0 )); then
   echo "$failures asset verification failure(s)." >&2
   exit 1

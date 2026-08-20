@@ -20,4 +20,4 @@ Use daemon navigation icons for tiles, compact navigation, and optional daemon-s
 
 ## Reports and PDFs
 
-Daemons remain responsible for the contents and generation of their PDFs. They may use their approved device image, navigation mark, accent, and chart styling. Health Hub coordinates viewing and downloading those daemon-produced documents without becoming their branding or content authority.
+Daemons remain responsible for the contents and generation of their PDFs and expose report generation through their APIs. Doctor-facing PDFs use restrained typography, tables, and clinically relevant charts without branding images or decorative iconography. Health Hub coordinates viewing and downloading those daemon-produced documents without becoming their content authority. Daemons continue to synchronize data and generate PDFs when used without Health Hub.
