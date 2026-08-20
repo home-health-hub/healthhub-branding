@@ -6,11 +6,13 @@ Use `org.homehealthhub.healthhub` as the icon basename and desktop-file identifi
 
 Linux packages install the PNG icons from `organization/avatar/exports/linux/hicolor/` into the matching `hicolor` theme directories. Install the SVG fallback from `scalable/apps/` when supported.
 
-The example in `organization/avatar/org.homehealthhub.healthhub.desktop.example` contains a placeholder URL. Deployment must substitute the real Hub address.
+The example in `organization/avatar/org.homehealthhub.healthhub.desktop.example` intentionally contains a placeholder URL. The branding repository does not define a production address. Installation or deployment configuration must substitute the applicable Hub address.
 
 ## Web application
 
 Use files in `organization/avatar/exports/web/` for the main Health Hub favicon, browser metadata, installable PWA, and touch icon. The PWA manifest should declare the 192- and 512-pixel normal icons and the maskable variants.
+
+Use the organization avatar as the single site-wide URL-bar and browser-tab favicon. It remains the favicon on login, administration, general Hub, and daemon-dashboard routes. Daemon navigation icons belong inside the page interface and do not replace the website favicon.
 
 ## Device interfaces
 
