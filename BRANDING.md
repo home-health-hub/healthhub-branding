@@ -47,6 +47,7 @@ Current daemon banners:
 | `etekcity-bp-daemon` | BLE blood-pressure measurements | Coral | `docs/images/etekcity-bp-daemon-banner.png` |
 | `trividia-truemetrix-daemon` | Bluetooth and USB glucose import | Warm gold | `docs/images/trividia-truemetrix-daemon-banner.png` |
 | `viatom-o2ring-daemon` | BLE live readings and overnight sessions | Oxygen blue with a small coral pulse accent | `docs/images/viatom-o2ring-daemon-banner.png` |
+| `health-thermometer-daemon` | Bluetooth health-temperature readings | Coral infrared and temperature accent | `docs/images/health-thermometer-daemon-banner.png` |
 
 Place a banner directly below the README's level-one project title:
 
@@ -82,6 +83,7 @@ daemons/
   trividia-truemetrix-daemon/
   viatom-o2ring-daemon/
   easyathome-bbt-daemon/
+  health-thermometer-daemon/
 templates/
 archive/
 ```
